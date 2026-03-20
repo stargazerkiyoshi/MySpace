@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SpaceRole {
+  OWNER
+  MEMBER
+}
+
+model User {
+  id          String      @id @default(cuid())
+  email       String      @unique
+  displayName String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  memberships Membership[]
+  spaces      Space[]     @relation("SpaceOwner")
+}
+
+model Space {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  description String?
+  ownerId     String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  owner       User         @relation("SpaceOwner", fields: [ownerId], references: [id])
+  members     Membership[]
+  nodes       Node[]
+  timeline    TimelineEvent[]
+}
+
+model Membership {
+  id        String    @id @default(cuid())
+  userId    String
+  spaceId   String
+  role      SpaceRole @default(MEMBER)
+  createdAt DateTime  @default(now())
+  space     Space     @relation(fields: [spaceId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@unique([userId, spaceId])
+}
+
+model Node {
+  id          String          @id @default(cuid())
+  spaceId      String
+  title        String
+  content      String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  space        Space          @relation(fields: [spaceId], references: [id])
+  timeline     TimelineEvent[]
+}
+
+model TimelineEvent {
+  id        String   @id @default(cuid())
+  spaceId    String
+  nodeId     String?
+  type       String
+  payload    Json?
+  createdAt  DateTime @default(now())
+  node       Node?    @relation(fields: [nodeId], references: [id])
+  space      Space    @relation(fields: [spaceId], references: [id])
+}
