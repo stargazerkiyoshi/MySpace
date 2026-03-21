@@ -6,6 +6,7 @@ import {
 import { AppShell } from "./layout/AppShell";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { NodePage } from "@/pages/NodePage";
+import { SpaceDetailPage } from "@/pages/SpaceDetailPage";
 import { SpacePage } from "@/pages/SpacePage";
 import { TimelinePage } from "@/pages/TimelinePage";
 
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "spaces",
         element: <SpacePage />,
+      },
+      {
+        path: "spaces/:spaceId",
+        element: <SpaceDetailPage />,
       },
       {
         path: "nodes",

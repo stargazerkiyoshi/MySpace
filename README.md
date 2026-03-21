@@ -74,6 +74,9 @@ pnpm prisma:migrate:deploy
 
 - Web: `http://localhost:5173`
 - Core API health: `http://localhost:3000/api/health`
+- Space list: `GET http://localhost:3000/api/spaces`
+- Space create: `POST http://localhost:3000/api/spaces`
+- Space detail: `GET http://localhost:3000/api/spaces/:spaceId`
 - AI service health: `http://localhost:3001/health`
 - AI service chat placeholder: `POST http://localhost:3001/chat`
 
@@ -92,13 +95,22 @@ pnpm prisma:migrate:deploy
 
 ## Current Scope
 
-当前只提供:
+当前提供:
 
 - monorepo 与统一启动脚本
-- `web` 基础布局与路由占位页
-- `core-api` 模块骨架与 health/placeholder 接口
+- `web` 的基础布局、Space 列表页、创建入口和 Space 详情占位页
+- `core-api` 的 health 接口，以及 Space 创建 / 列表 / 详情接口
 - `ai-service` 的 health/chat 占位接口
 - PostgreSQL / Redis 本地开发编排
+
+## Space Minimal Loop
+
+在本地启动 PostgreSQL 并完成 Prisma 迁移后，当前仓库已经支持以下最小业务流：
+
+1. 打开 `http://localhost:5173/spaces`
+2. 创建一个新的 Space
+3. 在列表中看到该 Space
+4. 点击进入 `/spaces/:spaceId` 查看该 Space 的首页占位信息
 
 当前明确不包含:
 

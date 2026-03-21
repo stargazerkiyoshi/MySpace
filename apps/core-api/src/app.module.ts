@@ -13,7 +13,7 @@ import { TimelineModule } from "./modules/timeline/timeline.module";
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ["../../.env", ".env"],
+      envFilePath: [".env", "apps/core-api/.env", "../../.env"],
     }),
     PrismaModule,
     RedisModule,

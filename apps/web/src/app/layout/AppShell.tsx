@@ -23,6 +23,9 @@ export function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const { collapsed, toggleCollapsed } = useAppShellStore();
+  const selectedKey =
+    menuItems.find((item) => location.pathname.startsWith(item.key))?.key ??
+    location.pathname;
 
   return (
     <Layout className="app-shell">
@@ -42,12 +45,12 @@ export function AppShell() {
             MySpace MVP
           </Typography.Title>
           <Typography.Paragraph className="app-shell__description">
-            工程壳层与后续能力的统一入口。
+            工程壳层与后续业务能力的统一入口。
           </Typography.Paragraph>
         </div>
         <Menu
           mode="inline"
-          selectedKeys={[location.pathname]}
+          selectedKeys={[selectedKey]}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
           className="app-shell__menu"
@@ -65,12 +68,12 @@ export function AppShell() {
                 MVP Foundation
               </Typography.Text>
               <Typography.Title level={4} className="app-shell__header-title">
-                {menuItems.find((item) => item.key === location.pathname)?.label ??
-                  "Workspace"}
+                {menuItems.find((item) => location.pathname.startsWith(item.key))
+                  ?.label ?? "Workspace"}
               </Typography.Title>
             </div>
           </Space>
-          <Tag color="cyan">Placeholder Ready</Tag>
+          <Tag color="cyan">Space Loop Ready</Tag>
         </Header>
         <Content className="app-shell__content">
           <Outlet />

@@ -1,10 +1,14 @@
-export type SpaceCard = {
-  title: string;
-  description: string;
+export type SpaceRecord = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  ownerId: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
-export type SpaceListResponse = {
-  module: string;
-  status: string;
-  items: unknown[];
+export type CreateSpaceInput = {
+  name: string;
+  description?: string;
 };
