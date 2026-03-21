@@ -84,6 +84,12 @@ pnpm prisma:migrate:deploy
 - HTTP 请求使用 `axios`，服务端状态管理使用 `TanStack Query`
 - 长期前端架构规则见 `docs/frontend-architecture.md`
 
+## Architecture Docs
+
+- 前端架构基线：`docs/frontend-architecture.md`
+- 主业务后端架构基线：`docs/backend-architecture.md`
+- AI 编排层架构基线：`docs/ai-service-architecture.md`
+
 ## Current Scope
 
 当前只提供:

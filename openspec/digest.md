@@ -1,94 +1,108 @@
 # OpenSpec 全局状态桥（digest）
 
-> 用途：为 AI 助手 / 协作者提供一个“当前状态快照”。
-> 规则：这是**覆盖式快照**，不是日志；每次更新请直接覆盖旧内容，不按时间追加流水记录。
+> 用途：为 AI 助手与协作者提供当前仓库的覆盖式状态快照。
+> 规则：本文件是快照，不是日志；每次更新直接覆盖旧内容。
 
 ## 1. 快照元信息
 
-- `snapshot_at`: `2026-02-26 11:08`
-- `owner`: `AI助手`
-- `scope`: `全仓库（v0.3 已归档；最近有开发环境配置提交；当前为维护态）`
+- `snapshot_at`: `2026-03-21`
+- `owner`: `Codex`
+- `scope`: `全仓库（bootstrap-space-collab-mvp-foundation 已归档，当前无活动 change）`
 - `status`: `yellow`
 
 ## 2. 当前目标（Top Goal）
 
-- `primary_goal`: `维护 v0.3 归档后的稳定基线，并保持 digest 与当前 Git/OpenSpec 状态一致`
-- `success_signal`: `digest 已反映无活动 change、最新 HEAD 与当前工作区状态`
-- `deadline_or_window`: `N/A`
+- `primary_goal`: `在 MVP 基线归档后保持工程、规范与架构文档处于一致且可继续迭代的稳定状态`
+- `success_signal`: `归档结果、主规范同步、架构文档与 README 一致，并完成后续 Git 提交`
+- `deadline_or_window`: `当前迭代收尾阶段`
 
 ## 3. 当前阶段与主线
 
 - `current_phase`: `archive`
-- `change_type`: `implementation-only`
+- `change_type`: `spec-impacting`
 - `active_change_ids`: `[]`
 - `active_specs`: `[]`
-- `branch_context`: `master（无活动 OpenSpec change；v0.3 已归档；最新提交为开发环境配置调整）`
-- `git_branch`: `master`
-- `git_head`: `c8823bf`
+- `branch_context`: `main；基础工程变更已归档，但归档与规范同步结果尚未提交`
+- `git_branch`: `main`
+- `git_head`: `8e5733d`
 - `git_dirty`: `true`
-- `git_changed_files`: `[openspec/digest.md]`
+- `git_changed_files`:
+  - `README.md`
+  - `docs/ai-service-architecture.md`
+  - `docs/backend-architecture.md`
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/.openspec.yaml` (deleted)
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/design.md` (deleted)
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/proposal.md` (deleted)
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/specs/ai-orchestration-service/spec.md` (deleted)
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/specs/core-api-foundation/spec.md` (deleted)
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/specs/local-dev-infrastructure/spec.md` (deleted)
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/specs/web-app-shell/spec.md` (deleted)
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/specs/workspace-monorepo-foundation/spec.md` (deleted)
+  - `openspec/changes/bootstrap-space-collab-mvp-foundation/tasks.md` (deleted)
+  - `openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/...` (new)
+  - `openspec/specs/...` (new)
 
 ## 4. 已确认决策（Current Decisions）
 
 - `decisions`:
-  - `v0.3 仅提供界面文案中英文切换（zh-CN / en），默认中文`
-  - `使用轻量本地方案（文案映射 + localStorage），不引入 vue-i18n`
-  - `语言切换不翻译 JSON 字段名与用户输入内容`
-  - `覆盖 Home 与 Spec Studio 主要界面文案及导入导出提示`
+  - `项目当前处于 MVP 基线搭建后的归档收尾阶段，优先保证结构清晰、边界明确、可持续迭代`
+  - `前端长期通用规则沉淀到 docs/frontend-architecture.md；当前项目业务要求继续沉淀到 OpenSpec`
+  - `后端与 AI 层的通用架构规则分别沉淀到 docs/backend-architecture.md 与 docs/ai-service-architecture.md`
+  - `OpenSpec 变更 bootstrap-space-collab-mvp-foundation 已归档并同步到 openspec/specs`
+  - `当前仓库保留根级 AGENTS.md 作为项目级 AI 协作入口`
 
 ## 5. 当前事实状态（Source-of-Truth Snapshot）
 
-- `spec_status`: `spec-studio 当前真相已合并 v0.3 中英文界面文案切换；规范包含需求 10（原 8 + 新增 2）`
-- `changes_status`: `无活动变更；最近 OpenSpec 主线为 v0.3（add-ui-language-toggle），已归档到 openspec/changes/archive/2026-02-26-add-ui-language-toggle/`
-- `code_status`: `Spec Studio 已具备 v0.3 中英文界面文案切换能力（含 localStorage 持久化、字段标签/默认填充内容/Tier 显示/导入导出提示本地化）；最近另有一次开发环境端口配置提交（见 git HEAD）`
-- `tests_status`: `v0.3 归档前 pnpm build 与 openspec-cn validate --all 通过；最近 HEAD(c8823bf) 本次仅用于快照更新，未额外复验`
+- `spec_status`: `当前无活动 change；主规范目录已包含 workspace-monorepo-foundation、web-app-shell、core-api-foundation、ai-orchestration-service、local-dev-infrastructure 五项规范`
+- `changes_status`: `bootstrap-space-collab-mvp-foundation 已归档至 openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/`
+- `code_status`: `monorepo、web、core-api、ai-service、docker compose、.env.example、README 与通用架构文档已落地；当前工作区仍有未提交的归档与文档改动`
+- `tests_status`: `此前已完成 pnpm install、pnpm check、pnpm build；当前收尾改动未再次触发新的构建验证`
 
 ## 6. 阻塞与风险（Blockers / Risks）
 
 - `blockers`:
-  - `无`
+  - `无硬阻塞`
 - `risks`:
-  - `当前为手写轻量文案表，后续文案增长时可能出现 key 漏配/漂移`
-  - `本次在未完成手动关键路径验证（2.6）的情况下归档；需确认 Home/Spec 切换后语言显示与 localStorage 持久化符合预期`
-  - `v0.3 的手动关键路径验证（2.6）仍未补做；若继续叠加功能迭代，问题定位成本会上升`
+  - `归档与规范同步结果尚未提交，当前工作区仍为 dirty`
+  - `README.md 处于已修改状态，需与当前架构文档和归档结果保持一致后再提交`
+  - `docs/ai-service-architecture.md` 与 `docs/backend-architecture.md` 尚未进入已提交基线`
 
 ## 7. 待确认事项（Open Questions）
 
 - `open_questions`:
-  - `是否在后续迭代引入更系统化的 i18n 组织方式（按页面拆分字典、自动键检查）`
+  - `README.md 当前修改是否仅为架构文档导航更新，提交前需再确认内容与项目现状一致`
+  - `下一轮 OpenSpec 变更应聚焦哪一项核心能力（例如 Space 基础模型、Node/Timeline、Agent 协作边界）`
 
 ## 8. 已完成事项（Done）
 
 - `done`:
-  - `创建活动变更 add-ui-language-toggle -> proposal/tasks/spec delta 已落盘并通过严格校验`
-  - `新增轻量语言状态模块 useUiLocale -> zh-CN/en 文案映射 + localStorage 持久化`
-  - `HomeView 与 SpecStudio 接入语言切换按钮 -> 主要界面文案可中英文切换`
-  - `本地化 v0.2 导入/导出成功失败提示与主要编辑器文案`
-  - `补齐字段标签本地化 -> worldName 与 knobs（fantasyRationality/magicTechRatio/conflictIntensity）显示文案可切换`
-  - `补齐默认填充内容本地化 -> 默认 worldName、初始示例规则名称/描述、新增规则默认名称/描述随语言切换（仅在仍为系统默认文案时转换）`
-  - `补齐 Tier 列显示本地化 -> 表格中的 hard/soft/flavor 显示为当前语言标签（仅显示层转换）`
-  - `运行 pnpm build -> 构建通过（存在 chunk size 警告但不阻塞）`
-  - `执行 openspec-cn archive add-ui-language-toggle --yes -> v0.3 变更已归档并合并到正式规范`
-  - `执行 openspec-cn validate --all --strict --no-interactive -> 全量 OpenSpec 校验通过`
-  - `提交 v0.3 功能与归档记录 -> 68c1f40 feat(spec-studio): 增加中英文界面切换并归档 v0.3`
-  - `最近提交开发环境配置调整 -> c8823bf change: 修改开发环境端口（非 OpenSpec change）`
+  - `完成 bootstrap-space-collab-mvp-foundation 变更的 proposal、design、tasks 与五项 capability spec`
+  - `完成 monorepo 基线与 web / core-api / ai-service 三个应用的最小可运行骨架`
+  - `完成 PostgreSQL / Redis / Docker Compose / Prisma 初始集成`
+  - `完成前端、后端、AI 层通用架构文档沉淀到 docs/`
+  - `执行 OpenSpec 归档，活动变更已迁移到 openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/`
+  - `主规范已同步到 openspec/specs/`
+  - `归档相关改动尚未完成 Git 提交`
 
 ## 9. 下一步动作（Next Actions）
 
 - `next_actions`:
-  - `[P1] 补做手动关键路径验证（切换/刷新保持/Home-Spec 同步/导入导出提示） -> 降低归档后回归风险`
-  - `[P2] 如需补强文案组织方式（按页面拆分/键检查） -> 新建小范围提案`
-  - `[P3] 若开发环境端口调整影响协作说明/README -> 评估是否补充文档说明`
-  - `[P4] 继续使用 /prompts:digest 维护快照 -> 后续变更保持 Active Change/Git State 同步`
+  - `[P1] 检查并提交当前归档、主规范同步、README 与 docs 架构文档改动`
+  - `[P2] 提交后确认工作区恢复 clean，作为新的稳定基线`
+  - `[P3] 基于当前项目方向发起下一项 OpenSpec 变更，而不是直接扩散实现`
 
 ## 10. 关键路径引用（References）
 
 - `references`:
-  - `openspec/project.md` - `长期项目定义（Vision / Constraints / Workflow）`
-  - `openspec/specs/spec-studio/spec.md` - `当前规范真相（已包含 v0.3 中英文界面文案切换，需求 10）`
-  - `openspec/changes/archive/2026-02-26-add-ui-language-toggle/proposal.md` - `v0.3 归档提案`
-  - `openspec/changes/archive/2026-02-26-add-ui-language-toggle/tasks.md` - `v0.3 归档任务清单（保留 2.6 未完成事实）`
-  - `openspec/changes/archive/2026-02-26-add-ui-language-toggle/specs/spec-studio/spec.md` - `v0.3 归档增量规范`
-  - `src/composables/useUiLocale.ts` - `共享语言状态与文案映射`
-  - `src/views/HomeView.vue` - `Home 页语言切换入口`
-  - `src/views/SpecStudio.vue` - `Spec Studio 文案切换与提示本地化`
+  - `openspec/project.md` - `项目总览与长期方向`
+  - `openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/proposal.md` - `已归档的 MVP 基线提案`
+  - `openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/design.md` - `已归档的 MVP 基线设计`
+  - `openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/tasks.md` - `已归档的实现任务清单`
+  - `openspec/specs/workspace-monorepo-foundation/spec.md` - `monorepo 基线规范`
+  - `openspec/specs/web-app-shell/spec.md` - `前端应用壳层规范`
+  - `openspec/specs/core-api-foundation/spec.md` - `主业务后端基础规范`
+  - `openspec/specs/ai-orchestration-service/spec.md` - `AI 编排服务规范`
+  - `openspec/specs/local-dev-infrastructure/spec.md` - `本地基础设施规范`
+  - `docs/frontend-architecture.md` - `前端通用架构规则`
+  - `docs/backend-architecture.md` - `后端通用架构规则`
+  - `docs/ai-service-architecture.md` - `AI 层通用架构规则`
