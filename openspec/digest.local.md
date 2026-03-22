@@ -5,16 +5,16 @@
 
 ## 1. 快照元信息
 
-- `snapshot_at`: `2026-03-21`
+- `snapshot_at`: `2026-03-22`
 - `owner`: `Codex`
-- `scope`: `本地工作区（bootstrap-space-collab-mvp-foundation 归档收尾）`
-- `status`: `yellow`
+- `scope`: `本地工作区（implement-space-minimal-business-loop 已归档）`
+- `status`: `green`
 
 ## 2. 当前目标（Top Goal）
 
-- `primary_goal`: `完成归档收尾并把当前工作区提交回稳定基线`
-- `success_signal`: `无活动 change、主规范已同步、工作区 clean`
-- `deadline_or_window`: `当前收尾阶段`
+- `primary_goal`: `保持 Space 最小业务闭环归档后的稳定基线，并准备下一条业务主线`
+- `success_signal`: `无活动 change、主规范同步完成、工作区 clean`
+- `deadline_or_window`: `归档收尾阶段`
 
 ## 3. 当前阶段与主线
 
@@ -22,54 +22,52 @@
 - `change_type`: `spec-impacting`
 - `active_change_ids`: `[]`
 - `active_specs`: `[]`
-- `branch_context`: `main；归档与文档改动待提交`
+- `branch_context`: `main；Space 主对象最小闭环已归档，等待提交归档结果`
 - `git_branch`: `main`
-- `git_head`: `8e5733d`
+- `git_head`: `c23d3d0`
 - `git_dirty`: `true`
 - `git_changed_files`:
-  - `README.md`
-  - `docs/ai-service-architecture.md`
-  - `docs/backend-architecture.md`
-  - `openspec/changes/bootstrap-space-collab-mvp-foundation/...` (deleted)
-  - `openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/...` (new)
-  - `openspec/specs/...` (new)
+  - `openspec/changes/archive/2026-03-22-implement-space-minimal-business-loop/...`
+  - `openspec/specs/core-api-foundation/spec.md`
+  - `openspec/specs/web-app-shell/spec.md`
+  - `openspec/specs/space-management/spec.md`
+  - `openspec/digest.local.md`
+  - `openspec/digest.md`
 
 ## 4. 已完成事项（Done）
 
 - `done`:
-  - `MVP 基线工程变更已实现并归档`
-  - `主规范已同步到 openspec/specs`
-  - `前端、后端、AI 层架构文档已沉淀到 docs`
-  - `归档相关改动尚未完成 Git 提交`
+  - `Space 主对象最小业务闭环已完成实现与真实联调验证`
+  - `implement-space-minimal-business-loop 已归档到 archive 目录`
+  - `space-management 已同步为主规范`
+  - `core-api-foundation 与 web-app-shell 已同步最新规范要求`
 
 ## 5. 下一步动作（Next Actions）
 
 - `next_actions`:
-  - `[P1] 复核 README 与 docs 文档内容`
-  - `[P2] 提交归档与文档改动`
-  - `[P3] 以新的 OpenSpec 变更继续后续业务演进`
+  - `[P1] 提交归档与规范同步结果`
+  - `[P2] 确认工作区恢复 clean`
+  - `[P3] 发起下一项围绕 Space 承载体的业务变更`
 
 ## 6. 阻塞与风险（Blockers / Risks）
 
 - `blockers`:
   - `无硬阻塞`
 - `risks`:
-  - `当前工作区 dirty，若继续直接开发会混淆归档收尾与下一轮变更`
+  - `当前仍有未提交的归档与 digest 更新结果`
 
 ## 7. 待确认事项（Open Questions）
 
 - `open_questions`:
-  - `下一项变更的能力范围尚未确定`
+  - `下一条业务主线优先级仍待决定`
 
 ## 8. 关键路径引用（References）
 
 - `references`:
   - `openspec/project.md`
-  - `openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/proposal.md`
-  - `openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/design.md`
-  - `openspec/changes/archive/2026-03-21-bootstrap-space-collab-mvp-foundation/tasks.md`
-  - `openspec/specs/workspace-monorepo-foundation/spec.md`
-  - `openspec/specs/web-app-shell/spec.md`
+  - `openspec/changes/archive/2026-03-22-implement-space-minimal-business-loop/proposal.md`
+  - `openspec/changes/archive/2026-03-22-implement-space-minimal-business-loop/design.md`
+  - `openspec/changes/archive/2026-03-22-implement-space-minimal-business-loop/tasks.md`
+  - `openspec/specs/space-management/spec.md`
   - `openspec/specs/core-api-foundation/spec.md`
-  - `openspec/specs/ai-orchestration-service/spec.md`
-  - `openspec/specs/local-dev-infrastructure/spec.md`
+  - `openspec/specs/web-app-shell/spec.md`
