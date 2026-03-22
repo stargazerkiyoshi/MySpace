@@ -1,10 +1,27 @@
+export type NodeType = "note" | "task" | "decision";
+export type NodeStatus = "todo" | "doing" | "done";
+
 export type NodeCard = {
   title: string;
   description: string;
 };
 
-export type NodeListResponse = {
-  module: string;
-  status: string;
-  items: unknown[];
+export type NodeRecord = {
+  id: string;
+  spaceId: string;
+  title: string;
+  content: string | null;
+  nodeType: NodeType;
+  status: NodeStatus;
+  createdAt: string;
+  updatedAt: string;
 };
+
+export type CreateNodeInput = {
+  title: string;
+  content?: string;
+  nodeType: NodeType;
+  status: NodeStatus;
+};
+
+export type UpdateNodeInput = Partial<CreateNodeInput>;

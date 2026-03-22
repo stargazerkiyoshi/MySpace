@@ -1,9 +1,22 @@
-import type { NodeCard } from "./types";
+import type { UiLocale } from "@/shared/i18n/types";
+import type { NodeCard, NodeStatus, NodeType } from "./types";
+import { getNodeMessages } from "./i18n";
 
-export function getNodePlaceholderCards(): NodeCard[] {
-  return [
-    { title: "Node Tree", description: "未来承载节点层级与过滤。" },
-    { title: "Node Canvas", description: "未来承载节点内容编辑视图。" },
-    { title: "Relations", description: "未来承载节点关系与引用信息。" },
-  ];
+export function getNodePlaceholderCards(locale: UiLocale): NodeCard[] {
+  return getNodeMessages(locale).cards;
+}
+
+export function formatNodeDate(value: string) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(value));
+}
+
+export function getNodeTypeLabel(locale: UiLocale, type: NodeType) {
+  return getNodeMessages(locale).typeOptions[type];
+}
+
+export function getNodeStatusLabel(locale: UiLocale, status: NodeStatus) {
+  return getNodeMessages(locale).statusOptions[status];
 }

@@ -1,4 +1,6 @@
 import { Button, Form, Input } from "antd";
+import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
+import { getSpaceMessages } from "../i18n";
 import type { CreateSpaceInput } from "../types";
 
 type SpaceCreateFormProps = {
@@ -10,6 +12,9 @@ export function SpaceCreateForm({
   isSubmitting,
   onSubmit,
 }: SpaceCreateFormProps) {
+  const { locale } = useUiLocaleStore();
+  const messages = getSpaceMessages(locale).form;
+
   return (
     <Form<CreateSpaceInput>
       layout="vertical"
@@ -17,27 +22,27 @@ export function SpaceCreateForm({
       initialValues={{ name: "", description: "" }}
     >
       <Form.Item
-        label="Space Name"
+        label={messages.nameLabel}
         name="name"
         rules={[
-          { required: true, message: "请输入 Space 名称。" },
-          { max: 80, message: "Space 名称不能超过 80 个字符。" },
+          { required: true, message: messages.nameRequired },
+          { max: 80, message: messages.nameMax },
         ]}
       >
-        <Input placeholder="例如：产品发布协作空间" />
+        <Input placeholder={messages.namePlaceholder} />
       </Form.Item>
       <Form.Item
-        label="Description"
+        label={messages.descriptionLabel}
         name="description"
-        rules={[{ max: 400, message: "描述不能超过 400 个字符。" }]}
+        rules={[{ max: 400, message: messages.descriptionMax }]}
       >
         <Input.TextArea
           autoSize={{ minRows: 3, maxRows: 5 }}
-          placeholder="简要说明这个 Space 正在承载的目标或事项。"
+          placeholder={messages.descriptionPlaceholder}
         />
       </Form.Item>
       <Button type="primary" htmlType="submit" loading={isSubmitting}>
-        Create Space
+        {messages.submit}
       </Button>
     </Form>
   );

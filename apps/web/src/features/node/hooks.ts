@@ -1,10 +1,55 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchNodes } from "./api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createNode, fetchNodeDetail, fetchSpaceNodes, updateNode } from "./api";
+import type { CreateNodeInput, UpdateNodeInput } from "./types";
 
-export function useNodesQuery() {
+export const nodeKeys = {
+  all: ["nodes"] as const,
+  list: (spaceId: string) => [...nodeKeys.all, "list", spaceId] as const,
+  detail: (nodeId: string) => [...nodeKeys.all, "detail", nodeId] as const,
+};
+
+export function useSpaceNodesQuery(spaceId: string) {
   return useQuery({
-    queryKey: ["nodes", "list"],
-    queryFn: fetchNodes,
+    queryKey: nodeKeys.list(spaceId),
+    queryFn: () => fetchSpaceNodes(spaceId),
+    enabled: Boolean(spaceId),
     retry: false,
+  });
+}
+
+export function useNodeDetailQuery(nodeId: string | null) {
+  return useQuery({
+    queryKey: nodeId ? nodeKeys.detail(nodeId) : [...nodeKeys.all, "detail", "empty"],
+    queryFn: () => fetchNodeDetail(nodeId!),
+    enabled: Boolean(nodeId),
+    retry: false,
+  });
+}
+
+export function useCreateNodeMutation(spaceId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: CreateNodeInput) => createNode(spaceId, input),
+    onSuccess: async (created) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: nodeKeys.list(spaceId) }),
+        queryClient.setQueryData(nodeKeys.detail(created.id), created),
+      ]);
+    },
+  });
+}
+
+export function useUpdateNodeMutation(spaceId: string, nodeId: string | null) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: UpdateNodeInput) => updateNode(nodeId!, input),
+    onSuccess: async (updated) => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: nodeKeys.list(spaceId) }),
+        queryClient.invalidateQueries({ queryKey: nodeKeys.detail(updated.id) }),
+      ]);
+    },
   });
 }

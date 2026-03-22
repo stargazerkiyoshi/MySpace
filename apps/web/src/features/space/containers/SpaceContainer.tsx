@@ -1,15 +1,19 @@
 import { Alert, Card, Skeleton, Space } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { PageSection } from "@/shared/ui/PageSection";
 import { SpaceCreateForm } from "../components/SpaceCreateForm";
 import { SpaceList } from "../components/SpaceList";
 import { useCreateSpaceMutation, useSpacesQuery } from "../hooks";
+import { getSpaceMessages } from "../i18n";
 import type { CreateSpaceInput } from "../types";
 
 export function SpaceContainer() {
   const query = useSpacesQuery();
   const createMutation = useCreateSpaceMutation();
   const navigate = useNavigate();
+  const { locale } = useUiLocaleStore();
+  const messages = getSpaceMessages(locale).listPage;
 
   function handleCreate(values: CreateSpaceInput) {
     createMutation.mutate(values);
@@ -17,8 +21,8 @@ export function SpaceContainer() {
 
   return (
     <PageSection
-      title="Spaces"
-      description="Space 是系统中的第一性对象。你可以在这里创建、查看并进入具体的协作空间。"
+      title={messages.title}
+      description={messages.description}
       badge="Space"
     >
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
@@ -26,7 +30,7 @@ export function SpaceContainer() {
           <Alert
             type="error"
             showIcon
-            message="Space 列表加载失败"
+            message={messages.listLoadError}
             description={query.error.message}
           />
         ) : null}
@@ -34,7 +38,7 @@ export function SpaceContainer() {
           <Alert
             type="error"
             showIcon
-            message="Space 创建失败"
+            message={messages.createError}
             description={createMutation.error.message}
           />
         ) : null}
@@ -42,12 +46,12 @@ export function SpaceContainer() {
           <Alert
             type="success"
             showIcon
-            message="Space 创建成功"
-            description="列表已刷新，你现在可以直接进入新创建的 Space。"
+            message={messages.createSuccess}
+            description={messages.createSuccessDescription}
           />
         ) : null}
 
-        <Card title="Create Space">
+        <Card title={messages.createTitle}>
           <SpaceCreateForm
             isSubmitting={createMutation.isPending}
             onSubmit={handleCreate}

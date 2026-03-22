@@ -12,6 +12,18 @@ enum SpaceRole {
   MEMBER
 }
 
+enum NodeType {
+  NOTE
+  TASK
+  DECISION
+}
+
+enum NodeStatus {
+  TODO
+  DOING
+  DONE
+}
+
 model User {
   id          String      @id @default(cuid())
   email       String      @unique
@@ -51,14 +63,18 @@ model Membership {
 }
 
 model Node {
-  id          String          @id @default(cuid())
-  spaceId      String
-  title        String
-  content      String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  space        Space          @relation(fields: [spaceId], references: [id])
-  timeline     TimelineEvent[]
+  id         String          @id @default(cuid())
+  spaceId    String
+  title      String
+  content    String?
+  nodeType   NodeType        @default(NOTE)
+  status     NodeStatus      @default(TODO)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  space      Space           @relation(fields: [spaceId], references: [id])
+  timeline   TimelineEvent[]
+
+  @@index([spaceId, updatedAt])
 }
 
 model TimelineEvent {

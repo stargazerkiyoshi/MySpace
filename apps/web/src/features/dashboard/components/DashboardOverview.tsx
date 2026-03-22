@@ -1,5 +1,7 @@
 import { Alert } from "antd";
+import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { PlaceholderGrid } from "@/shared/ui/PlaceholderGrid";
+import { getDashboardMessages } from "../i18n";
 import type { DashboardCard } from "../types";
 
 type DashboardOverviewProps = {
@@ -11,13 +13,16 @@ export function DashboardOverview({
   items,
   requestState,
 }: DashboardOverviewProps) {
+  const locale = useUiLocaleStore((state) => state.locale);
+  const messages = getDashboardMessages(locale).page;
+
   return (
     <>
       {requestState === "error" ? (
         <Alert
           type="warning"
           showIcon
-          message="Dashboard 接口当前不可用，页面仍使用占位数据保持壳层稳定。"
+          message={messages.requestError}
         />
       ) : null}
       <PlaceholderGrid items={items} />

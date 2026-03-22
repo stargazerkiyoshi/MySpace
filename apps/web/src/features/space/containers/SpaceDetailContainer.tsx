@@ -1,7 +1,10 @@
 import { Alert, Card, Skeleton } from "antd";
+import { NodeWorkspace } from "@/features/node/containers/NodeWorkspace";
+import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { PageSection } from "@/shared/ui/PageSection";
 import { SpaceDetailPanel } from "../components/SpaceDetailPanel";
 import { useSpaceDetailQuery } from "../hooks";
+import { getSpaceMessages } from "../i18n";
 
 type SpaceDetailContainerProps = {
   spaceId: string;
@@ -11,12 +14,14 @@ export function SpaceDetailContainer({
   spaceId,
 }: SpaceDetailContainerProps) {
   const query = useSpaceDetailQuery(spaceId);
+  const { locale } = useUiLocaleStore();
+  const messages = getSpaceMessages(locale).detailPage;
 
   return (
     <PageSection
-      title="Space Home"
-      description="这里展示当前 Space 的最小基本信息，并作为后续子能力的稳定承载入口。"
-      badge="Space Detail"
+      title={messages.title}
+      description={messages.description}
+      badge={messages.badge}
     >
       {query.isLoading ? (
         <Card>
@@ -27,11 +32,16 @@ export function SpaceDetailContainer({
         <Alert
           type="error"
           showIcon
-          message="Space 详情加载失败"
+          message={messages.loadError}
           description={query.error.message}
         />
       ) : null}
-      {query.data ? <SpaceDetailPanel space={query.data} /> : null}
+      {query.data ? (
+        <>
+          <SpaceDetailPanel space={query.data} />
+          <NodeWorkspace spaceId={query.data.id} />
+        </>
+      ) : null}
     </PageSection>
   );
 }

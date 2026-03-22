@@ -1,9 +1,7 @@
+import type { UiLocale } from "@/shared/i18n/types";
 import type { TimelineCard } from "./types";
+import { getTimelineMessages } from "./i18n";
 
-export function getTimelinePlaceholderCards(): TimelineCard[] {
-  return [
-    { title: "Activity Stream", description: "未来承载最近事件列表。" },
-    { title: "Snapshots", description: "未来承载关键时间点回看。" },
-    { title: "History Tree", description: "本次仅保留占位，不实现完整历史树。" },
-  ];
+export function getTimelinePlaceholderCards(locale: UiLocale): TimelineCard[] {
+  return getTimelineMessages(locale).cards;
 }

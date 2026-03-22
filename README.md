@@ -77,6 +77,10 @@ pnpm prisma:migrate:deploy
 - Space list: `GET http://localhost:3000/api/spaces`
 - Space create: `POST http://localhost:3000/api/spaces`
 - Space detail: `GET http://localhost:3000/api/spaces/:spaceId`
+- Space node list: `GET http://localhost:3000/api/spaces/:spaceId/nodes`
+- Space node create: `POST http://localhost:3000/api/spaces/:spaceId/nodes`
+- Node detail: `GET http://localhost:3000/api/nodes/:nodeId`
+- Node update: `PATCH http://localhost:3000/api/nodes/:nodeId`
 - AI service health: `http://localhost:3001/health`
 - AI service chat placeholder: `POST http://localhost:3001/chat`
 
@@ -85,6 +89,7 @@ pnpm prisma:migrate:deploy
 - 组件按 `app / pages / features / shared` 分层，而不是把所有内容堆进单一 `components` 目录
 - 样式基线固定为 Ant Design + Less
 - HTTP 请求使用 `axios`，服务端状态管理使用 `TanStack Query`
+- UI 文案双语使用轻量字典 + 全局语言状态；当前支持 `zh-CN / en`，并通过 `localStorage` 持久化
 - 长期前端架构规则见 `docs/frontend-architecture.md`
 
 ## Architecture Docs
