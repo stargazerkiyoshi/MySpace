@@ -1,37 +1,14 @@
-## ADDED Requirements
-
-### 需求:主业务服务基础骨架
-系统必须提供一个基于 Node.js、TypeScript 和 NestJS 的主业务服务骨架，作为空间型协作系统的主业务入口。
-
-#### 场景:启动主业务服务
-- **当** 开发者启动 `core-api`
-- **那么** 服务必须能够以最小可运行状态启动并暴露基础 HTTP 能力
+## MODIFIED Requirements
 
 ### 需求:领域模块边界
-系统必须在 `core-api` 中建立 `auth`、`space`、`node`、`timeline`、`dashboard` 五个基础模块骨架，并保持模块边界清晰；其中 `space` 模块必须在自身边界内承载 Space 主对象的最小业务闭环，不得将 Space 相关 Prisma 查询散落在 controller 中。
+系统必须在 `core-api` 中建立 `auth`、`space`、`node`、`timeline`、`dashboard` 五个基础模块骨架，并保持模块边界清晰；其中 `space` 模块必须在自身边界内承载 Space 主对象的最小业务闭环，`node` 模块必须在自身边界内承载 Node 主对象的最小业务闭环，不得将 Space 或 Node 相关 Prisma 查询散落在 controller 中。
 
 #### 场景:查看主业务服务模块结构
 - **当** 开发者浏览 `core-api` 代码目录
 - **那么** 必须能够识别五个独立的领域模块及其基础入口文件
-- **并且** `space` 模块中的接口必须通过 controller、application/use case 和 infrastructure 的分层完成请求处理
+- **并且** `space` 与 `node` 模块中的接口必须通过 controller、application/use case 和 infrastructure 的分层完成请求处理
 
-### 需求:PostgreSQL 与 Prisma 基础接入
-系统必须通过 Prisma 接入 PostgreSQL，并提供初始 schema 骨架以支持后续领域建模。
-
-#### 场景:检查数据库接入配置
-- **当** 开发者查看 `core-api` 的数据库层配置
-- **那么** 必须存在 Prisma 配置、数据库连接约定和初始 schema 骨架
-
-### 需求:Redis 基础接入
-系统必须提供 Redis 连接配置，作为缓存或队列能力的基础设施入口，但不得在本次变更中强绑定复杂业务处理流程。
-
-#### 场景:检查缓存基础设施配置
-- **当** 开发者查看 `core-api` 的基础设施配置
-- **那么** 必须存在 Redis 连接所需的配置入口和可扩展的封装位置
-
-### 需求:AI 边界隔离
-系统必须保持 AI 编排逻辑不直接写入主业务服务，主业务服务不得承担 AI 流程编排职责。
-
-#### 场景:审查服务职责边界
-- **当** 开发者检查 `core-api` 中的模块职责
-- **那么** 不得发现将聊天编排、模型调用流程或 Agent 协调直接实现为主业务模块核心职责
+#### 场景:在某个 Space 下创建并更新 Node
+- **当** 前端请求在某个 Space 下创建 Node 或更新某个 Node
+- **那么** `core-api` 必须通过 `node` 模块完成请求编排、数据校验与持久化
+- **并且** controller 不得直接承担 Prisma 查询与写入逻辑
