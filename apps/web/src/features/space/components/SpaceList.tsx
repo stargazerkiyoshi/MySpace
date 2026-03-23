@@ -1,5 +1,4 @@
-import { ArrowRightOutlined } from "@ant-design/icons";
-import { Button, Card, Empty, Space, Typography } from "antd";
+import { Card, Empty, Space, Typography } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { getSpaceMessages } from "../i18n";
 import type { SpaceRecord } from "../types";
@@ -33,7 +32,17 @@ export function SpaceList({ items, onOpen }: SpaceListProps) {
       {items.map((item) => (
         <div key={item.id} style={{ minWidth: 0 }}>
           <Card
-            style={{ borderRadius: 16, height: "100%", width: "100%" }}
+            hoverable
+            role="button"
+            tabIndex={0}
+            onClick={() => onOpen(item.id)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onOpen(item.id);
+              }
+            }}
+            style={{ borderRadius: 16, height: "100%", width: "100%", cursor: "pointer" }}
             styles={{ body: { height: "100%", padding: 18 } }}
           >
             <Space
@@ -54,15 +63,6 @@ export function SpaceList({ items, onOpen }: SpaceListProps) {
                     {item.name}
                   </Typography.Title>
                 </Space>
-                <Button
-                  type="link"
-                  icon={<ArrowRightOutlined />}
-                  onClick={() => onOpen(item.id)}
-                  key={`open-${item.id}`}
-                  style={{ paddingInline: 0, paddingBlock: 0, height: "auto" }}
-                >
-                  {messages.open}
-                </Button>
               </Space>
               <Typography.Paragraph
                 ellipsis={{ rows: 2, tooltip: item.description || messages.noDescription }}

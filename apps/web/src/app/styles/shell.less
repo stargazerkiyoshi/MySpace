@@ -1,13 +1,15 @@
 .app-shell {
   min-height: 100vh;
+  background: #f4f1eb;
 }
 
 .app-shell__sider {
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid #ddd6cb;
+  background: #fcfbf8 !important;
 }
 
 .app-shell__brand {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e6dfd4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,12 +33,9 @@
   text-transform: uppercase;
 }
 
-.app-shell__eyebrow {
-  color: #0f766e;
-}
-
 .app-shell__title {
   margin: 0 !important;
+  color: #243447;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -51,38 +50,50 @@
   padding: 10px 6px;
 }
 
+.app-shell__menu .ant-menu-item,
+.app-shell__menu .ant-menu-submenu-title {
+  margin-inline: 0 !important;
+  border-radius: 10px !important;
+}
+
+.app-shell__menu.ant-menu-light .ant-menu-item-selected {
+  background: #e6edf5 !important;
+  color: #2f5b8a !important;
+}
+
 .app-shell__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 80px;
   padding: 0 24px;
-  border-bottom: 1px solid #dbe4f0;
+  border-bottom: 1px solid #e2dbd0;
   background:
-    radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 24%),
-    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    radial-gradient(circle at top left, rgba(47, 91, 138, 0.08), transparent 24%),
+    linear-gradient(180deg, #fcfbf8 0%, #f3eee6 100%);
 }
 
 .app-shell__header-eyebrow {
-  color: #64748b;
+  color: #7b7280;
 }
 
 .app-shell__header-title {
   margin: 0 !important;
+  color: #243447;
 }
 
 .app-shell__content {
   min-height: calc(100vh - 80px);
   padding: 24px;
   background:
-    radial-gradient(circle at top, rgba(15, 118, 110, 0.1), transparent 28%),
-    linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+    radial-gradient(circle at top, rgba(47, 91, 138, 0.08), transparent 28%),
+    linear-gradient(180deg, #f8f5ef 0%, #ece6dd 100%);
 }
 
 .page-card {
   border: none !important;
   border-radius: 18px !important;
-  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 18px 40px rgba(36, 52, 71, 0.08);
 }
 
 .page-card__badge {
@@ -91,6 +102,7 @@
 
 .placeholder-card {
   height: 100%;
-  border: 1px solid #e2e8f0 !important;
+  border: 1px solid #e3ddd2 !important;
   border-radius: 14px !important;
+  background: #fcfbf8;
 }

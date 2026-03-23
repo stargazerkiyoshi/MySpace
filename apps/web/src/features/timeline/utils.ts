@@ -122,17 +122,17 @@ export function getTimelineEventSummary(
 export function getTimelineNodeTone(nodeType: TimelineNodeType) {
   switch (nodeType) {
     case "branch_created":
-      return { color: "orange", borderColor: "#fb923c", background: "#fff7ed" };
+      return { color: "orange", borderColor: "#c58a4f", background: "#f8efe3" };
     case "decision":
-      return { color: "gold", borderColor: "#f59e0b", background: "#fffbeb" };
+      return { color: "gold", borderColor: "#b88a43", background: "#f8f1df" };
     case "completed":
-      return { color: "green", borderColor: "#22c55e", background: "#f0fdf4" };
+      return { color: "green", borderColor: "#6e9b73", background: "#edf5ee" };
     case "interrupted":
-      return { color: "red", borderColor: "#f87171", background: "#fef2f2" };
+      return { color: "red", borderColor: "#b57575", background: "#f8ecec" };
     case "external_event":
-      return { color: "cyan", borderColor: "#22d3ee", background: "#ecfeff" };
+      return { color: "cyan", borderColor: "#6995a0", background: "#edf4f5" };
     default:
-      return { color: "blue", borderColor: "#60a5fa", background: "#eff6ff" };
+      return { color: "blue", borderColor: "#7a95b8", background: "#eef2f7" };
   }
 }
 

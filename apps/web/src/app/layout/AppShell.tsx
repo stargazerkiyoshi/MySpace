@@ -6,7 +6,7 @@ import {
   MenuUnfoldOutlined,
   NodeIndexOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, Segmented, Space, Tag, Typography } from "antd";
+import { Button, Layout, Menu, Segmented, Space, Typography } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { pickMessage, sharedMessages } from "@/shared/i18n/shared.messages";
 import { useAppShellStore } from "@/shared/state/app-shell.store";
@@ -97,7 +97,6 @@ export function AppShell() {
               ]}
               onChange={(value) => setLocale(value)}
             />
-            <Tag color="cyan">{pickMessage(shellMessages.statusTag, locale)}</Tag>
           </Space>
         </Header>
         <Content className="app-shell__content">

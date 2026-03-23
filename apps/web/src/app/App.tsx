@@ -8,11 +8,15 @@ export function App() {
       theme={{
         algorithm: theme.defaultAlgorithm,
         token: {
-          colorPrimary: "#0f766e",
+          colorPrimary: "#2f5b8a",
           borderRadius: 14,
           fontFamily:
             "'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif",
-          colorBgLayout: "#f3f4f6",
+          colorBgLayout: "#f4f1eb",
+          colorBgContainer: "#fcfbf8",
+          colorBorder: "#ddd6cb",
+          colorText: "#1f2937",
+          colorTextSecondary: "#6b7280",
         },
       }}
     >
