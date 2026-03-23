@@ -1,5 +1,5 @@
 import { http } from "@/shared/lib/http";
-import type { CreateSpaceInput, SpaceRecord } from "./types";
+import type { CreateSpaceInput, SpaceRecord, UpdateSpaceInput } from "./types";
 
 export async function fetchSpaces() {
   const { data } = await http.get<SpaceRecord[]>("/spaces");
@@ -13,5 +13,10 @@ export async function fetchSpace(spaceId: string) {
 
 export async function createSpace(input: CreateSpaceInput) {
   const { data } = await http.post<SpaceRecord>("/spaces", input);
+  return data;
+}
+
+export async function updateSpace(spaceId: string, input: UpdateSpaceInput) {
+  const { data } = await http.patch<SpaceRecord>(`/spaces/${spaceId}`, input);
   return data;
 }

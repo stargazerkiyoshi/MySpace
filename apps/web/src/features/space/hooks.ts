@@ -3,8 +3,8 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { createSpace, fetchSpace, fetchSpaces } from "./api";
-import type { CreateSpaceInput } from "./types";
+import { createSpace, fetchSpace, fetchSpaces, updateSpace } from "./api";
+import type { CreateSpaceInput, UpdateSpaceInput } from "./types";
 
 export const spaceKeys = {
   all: ["spaces"] as const,
@@ -36,6 +36,21 @@ export function useCreateSpaceMutation() {
     mutationFn: (input: CreateSpaceInput) => createSpace(input),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: spaceKeys.list() });
+    },
+  });
+}
+
+export function useUpdateSpaceMutation(spaceId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: UpdateSpaceInput) => updateSpace(spaceId, input),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: spaceKeys.list() }),
+        queryClient.invalidateQueries({ queryKey: spaceKeys.detail(spaceId) }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+      ]);
     },
   });
 }

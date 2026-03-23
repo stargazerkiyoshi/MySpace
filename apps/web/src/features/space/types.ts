@@ -12,3 +12,8 @@ export type CreateSpaceInput = {
   name: string;
   description?: string;
 };
+
+export type UpdateSpaceInput = {
+  name?: string;
+  description?: string;
+};

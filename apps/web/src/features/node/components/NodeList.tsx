@@ -29,18 +29,28 @@ export function NodeList({
       renderItem={(item) => (
         <List.Item
           key={item.id}
+          style={{
+            paddingInline: 0,
+            paddingBlock: 14,
+            minHeight: 148,
+            borderBottom: "1px solid #f1f5f9",
+          }}
           extra={
             <Button
               type={selectedNodeId === item.id ? "primary" : "default"}
+              size="small"
               onClick={() => onSelect(item.id)}
             >
               {messages.open}
             </Button>
           }
         >
-          <Space direction="vertical" size="small" style={{ width: "100%" }}>
+          <Space
+            direction="vertical"
+            size="small"
+            style={{ width: "100%", minHeight: 118, justifyContent: "space-between" }}
+          >
             <Space wrap>
-              <Tag>{getNodeTypeLabel(locale, item.nodeType)}</Tag>
               <Tag
                 color={
                   item.status === "done"
@@ -52,11 +62,21 @@ export function NodeList({
               >
                 {getNodeStatusLabel(locale, item.status)}
               </Tag>
+              <Typography.Text type="secondary">
+                {getNodeTypeLabel(locale, item.nodeType)}
+              </Typography.Text>
             </Space>
-            <Typography.Title level={5} style={{ margin: 0 }}>
+            <Typography.Title
+              level={5}
+              style={{ margin: 0 }}
+              ellipsis={{ rows: 1, tooltip: item.title }}
+            >
               {item.title}
             </Typography.Title>
-            <Typography.Paragraph style={{ marginBottom: 0, color: "#64748b" }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: item.content || messages.noContent }}
+              style={{ marginBottom: 0, color: "#64748b" }}
+            >
               {item.content || messages.noContent}
             </Typography.Paragraph>
             <Typography.Text type="secondary">

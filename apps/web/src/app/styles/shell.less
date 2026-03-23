@@ -8,7 +8,18 @@
 
 .app-shell__brand {
   border-bottom: 1px solid #e5e7eb;
-  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.app-shell__brand--collapsed {
+  justify-content: center;
+  padding: 14px 10px;
+  text-align: center;
 }
 
 .app-shell__eyebrow,
@@ -25,17 +36,19 @@
 }
 
 .app-shell__title {
-  margin: 12px 0 4px !important;
+  margin: 0 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.app-shell__description {
-  margin-bottom: 0 !important;
-  color: #64748b;
+.app-shell__brand--collapsed .app-shell__title {
+  margin: 0 !important;
 }
 
 .app-shell__menu {
   border-inline-end: 0 !important;
-  padding: 16px 12px;
+  padding: 10px 6px;
 }
 
 .app-shell__header {

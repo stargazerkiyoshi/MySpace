@@ -57,14 +57,6 @@ const messages = {
       "zh-CN": "暂无对应历史节点",
       en: "No related history node yet",
     },
-    summaryTitle: {
-      "zh-CN": "为什么当前会是这样",
-      en: "Why the Current State Looks Like This",
-    },
-    summaryDescription: {
-      "zh-CN": "首页状态与时间线共享同一套历史锚点。你可以从这里直接回到来源节点、关键推进节点或最近分支节点。",
-      en: "The home state and timeline now share the same history anchors. Jump directly to the source node, the key progress node, or the latest branch node from here.",
-    },
     createdAt: {
       "zh-CN": "发生时间",
       en: "Happened At",
@@ -98,8 +90,6 @@ export function getDashboardMessages(locale: UiLocale) {
       openSpace: pickMessage(messages.overview.openSpace, locale),
       openHistory: pickMessage(messages.overview.openHistory, locale),
       noHistoryLink: pickMessage(messages.overview.noHistoryLink, locale),
-      summaryTitle: pickMessage(messages.overview.summaryTitle, locale),
-      summaryDescription: pickMessage(messages.overview.summaryDescription, locale),
       createdAt: pickMessage(messages.overview.createdAt, locale),
       mainline: pickMessage(messages.overview.mainline, locale),
       branch: pickMessage(messages.overview.branch, locale),

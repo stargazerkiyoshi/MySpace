@@ -1,6 +1,5 @@
-import { Alert } from "antd";
+import { Alert, Card, List, Space, Typography } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
-import { PlaceholderGrid } from "@/shared/ui/PlaceholderGrid";
 import { getNodeMessages } from "../i18n";
 import type { NodeCard } from "../types";
 
@@ -18,7 +17,24 @@ export function NodeOverview({ items, requestState }: NodeOverviewProps) {
       {requestState === "error" ? (
         <Alert type="warning" showIcon message={messages.requestError} />
       ) : null}
-      <PlaceholderGrid items={items} />
+      <Card style={{ borderRadius: 16 }}>
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+          <Typography.Paragraph style={{ marginBottom: 0, color: "#64748b" }}>
+            {messages.description}
+          </Typography.Paragraph>
+          <List
+            dataSource={items}
+            renderItem={(item) => (
+              <List.Item style={{ paddingInline: 0 }}>
+                <Space direction="vertical" size={2}>
+                  <Typography.Text strong>{item.title}</Typography.Text>
+                  <Typography.Text type="secondary">{item.description}</Typography.Text>
+                </Space>
+              </List.Item>
+            )}
+          />
+        </Space>
+      </Card>
     </>
   );
 }

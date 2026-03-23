@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import type { Space, User } from "@prisma/client";
 import { PrismaService } from "../../../infrastructure/database/prisma.service";
 import { CreateSpaceDto } from "../dto/create-space.dto";
+import { UpdateSpaceDto } from "../dto/update-space.dto";
 
 const DEFAULT_OWNER_EMAIL = "owner@myspace.local";
 const DEFAULT_OWNER_DISPLAY_NAME = "Space Owner";
@@ -53,6 +54,36 @@ export class SpaceRepository {
     });
   }
 
+  async updateSpace(spaceId: string, input: UpdateSpaceDto): Promise<Space> {
+    const current = await this.getSpaceById(spaceId);
+    const data: {
+      name?: string;
+      description?: string | null;
+      slug?: string;
+    } = {};
+
+    if (typeof input.name === "string" && input.name.trim() && input.name.trim() !== current.name) {
+      const nextName = input.name.trim();
+      data.name = nextName;
+      data.slug = await this.generateUniqueSlug(nextName, current.id);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(input, "description")) {
+      data.description = input.description?.trim() || null;
+    }
+
+    if (!Object.keys(data).length) {
+      return current;
+    }
+
+    return this.prisma.space.update({
+      where: {
+        id: current.id,
+      },
+      data,
+    });
+  }
+
   private async ensureDefaultOwner(): Promise<User> {
     return this.prisma.user.upsert({
       where: {
@@ -68,13 +99,20 @@ export class SpaceRepository {
     });
   }
 
-  private async generateUniqueSlug(name: string): Promise<string> {
+  private async generateUniqueSlug(name: string, excludeSpaceId?: string): Promise<string> {
     const baseSlug = slugify(name);
     const existingSpaces = await this.prisma.space.findMany({
       where: {
         slug: {
           startsWith: baseSlug,
         },
+        ...(excludeSpaceId
+          ? {
+              id: {
+                not: excludeSpaceId,
+              },
+            }
+          : {}),
       },
       select: {
         slug: true,

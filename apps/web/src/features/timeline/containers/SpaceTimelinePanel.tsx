@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Card, Col, Row, Skeleton, Typography } from "antd";
+import { Alert, Drawer, Skeleton } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { TimelineEventDetailPanel } from "../components/TimelineEventDetailPanel";
 import { TimelineEventList } from "../components/TimelineEventList";
@@ -17,6 +17,7 @@ export function SpaceTimelinePanel({
 }: SpaceTimelinePanelProps) {
   const query = useTimelineQuery(spaceId);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const detailQuery = useTimelineDetailQuery(selectedEventId);
   const locale = useUiLocaleStore((state) => state.locale);
   const messages = getTimelineMessages(locale).widget;
@@ -38,10 +39,7 @@ export function SpaceTimelinePanel({
   }, [initialSelectedEventId, query.data]);
 
   return (
-    <Card title={messages.title}>
-      <Typography.Paragraph type="secondary">
-        {messages.description}
-      </Typography.Paragraph>
+    <>
       {query.isLoading ? <Skeleton active paragraph={{ rows: 6 }} /> : null}
       {query.isError ? (
         <Alert
@@ -52,23 +50,27 @@ export function SpaceTimelinePanel({
         />
       ) : null}
       {query.data ? (
-        <Row gutter={[16, 16]}>
-          <Col xs={24} xl={14}>
-            <TimelineEventList
-              items={query.data}
-              selectedEventId={selectedEventId}
-              onSelect={setSelectedEventId}
-            />
-          </Col>
-          <Col xs={24} xl={10}>
-            <TimelineEventDetailPanel
-              item={detailQuery.data}
-              isLoading={detailQuery.isLoading}
-              errorMessage={detailQuery.isError ? detailQuery.error.message : undefined}
-            />
-          </Col>
-        </Row>
+        <TimelineEventList
+          items={query.data}
+          selectedEventId={selectedEventId}
+          onSelect={(eventId) => {
+            setSelectedEventId(eventId);
+            setIsDetailOpen(true);
+          }}
+        />
       ) : null}
-    </Card>
+      <Drawer
+        title={messages.detailTrigger}
+        width={640}
+        open={isDetailOpen}
+        onClose={() => setIsDetailOpen(false)}
+      >
+        <TimelineEventDetailPanel
+          item={detailQuery.data}
+          isLoading={detailQuery.isLoading}
+          errorMessage={detailQuery.isError ? detailQuery.error.message : undefined}
+        />
+      </Drawer>
+    </>
   );
 }

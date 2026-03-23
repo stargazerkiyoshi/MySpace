@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Card, Col, Row, Skeleton } from "antd";
+import { Alert, Button, Drawer, Skeleton, Space } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { NodeCreateForm } from "../components/NodeCreateForm";
 import { NodeDetailForm } from "../components/NodeDetailForm";
@@ -22,6 +22,8 @@ export function NodeWorkspace({ spaceId }: NodeWorkspaceProps) {
   const messages = getNodeMessages(locale);
   const listQuery = useSpaceNodesQuery(spaceId);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const detailQuery = useNodeDetailQuery(selectedNodeId);
   const createMutation = useCreateNodeMutation(spaceId);
   const updateMutation = useUpdateNodeMutation(spaceId, selectedNodeId);
@@ -48,103 +50,117 @@ export function NodeWorkspace({ spaceId }: NodeWorkspaceProps) {
     createMutation.mutate(values, {
       onSuccess: (created) => {
         setSelectedNodeId(created.id);
+        setIsCreateOpen(false);
+        setIsDetailOpen(true);
       },
     });
   }
 
   function handleUpdate(values: UpdateNodeInput) {
-    updateMutation.mutate(values);
+    updateMutation.mutate(values, {
+      onSuccess: () => {
+        setIsDetailOpen(false);
+      },
+    });
   }
 
   return (
-    <Card title={messages.workspace.title}>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} xl={8}>
-          {createMutation.isError ? (
-            <Alert
-              type="error"
-              showIcon
-              message={messages.workspace.createError}
-              description={createMutation.error.message}
-              style={{ marginBottom: 16 }}
-            />
-          ) : null}
-          {createMutation.isSuccess ? (
-            <Alert
-              type="success"
-              showIcon
-              message={messages.workspace.createSuccess}
-              style={{ marginBottom: 16 }}
-            />
-          ) : null}
-          <Card
-            title={messages.workspace.createTitle}
-            size="small"
+    <>
+      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+        <Space style={{ width: "100%", justifyContent: "flex-end" }}>
+          <Button type="primary" onClick={() => setIsCreateOpen(true)}>
+            {messages.workspace.createTitle}
+          </Button>
+        </Space>
+
+        {createMutation.isError ? (
+          <Alert
+            type="error"
+            showIcon
+            message={messages.workspace.createError}
+            description={createMutation.error.message}
+          />
+        ) : null}
+        {createMutation.isSuccess ? (
+          <Alert
+            type="success"
+            showIcon
+            message={messages.workspace.createSuccess}
+          />
+        ) : null}
+        {listQuery.isLoading ? (
+          <Skeleton active paragraph={{ rows: 4 }} />
+        ) : listQuery.isError ? (
+          <Alert
+            type="error"
+            showIcon
+            message={messages.workspace.listLoadError}
+            description={listQuery.error.message}
+          />
+        ) : (
+          <NodeList
+            items={listQuery.data ?? []}
+            selectedNodeId={selectedNodeId}
+            onSelect={(nodeId) => {
+              setSelectedNodeId(nodeId);
+              setIsDetailOpen(true);
+            }}
+          />
+        )}
+      </Space>
+
+      <Drawer
+        title={messages.workspace.createTitle}
+        width={560}
+        open={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+      >
+        <NodeCreateForm
+          isSubmitting={createMutation.isPending}
+          onSubmit={handleCreate}
+        />
+      </Drawer>
+      <Drawer
+        title={messages.workspace.detailTitle}
+        width={720}
+        open={isDetailOpen}
+        onClose={() => setIsDetailOpen(false)}
+      >
+        {detailQuery.isLoading && selectedNodeId ? (
+          <Skeleton active paragraph={{ rows: 8 }} />
+        ) : null}
+        {detailQuery.isError ? (
+          <Alert
+            type="error"
+            showIcon
+            message={messages.workspace.detailLoadError}
+            description={detailQuery.error.message}
             style={{ marginBottom: 16 }}
-          >
-            <NodeCreateForm
-              isSubmitting={createMutation.isPending}
-              onSubmit={handleCreate}
-            />
-          </Card>
-          <Card title={messages.workspace.listTitle} size="small">
-            {listQuery.isLoading ? (
-              <Skeleton active paragraph={{ rows: 4 }} />
-            ) : listQuery.isError ? (
-              <Alert
-                type="error"
-                showIcon
-                message={messages.workspace.listLoadError}
-                description={listQuery.error.message}
-              />
-            ) : (
-              <NodeList
-                items={listQuery.data ?? []}
-                selectedNodeId={selectedNodeId}
-                onSelect={setSelectedNodeId}
-              />
-            )}
-          </Card>
-        </Col>
-        <Col xs={24} xl={16}>
-          <Card title={messages.workspace.detailTitle} size="small">
-            {detailQuery.isLoading && selectedNodeId ? (
-              <Skeleton active paragraph={{ rows: 8 }} />
-            ) : null}
-            {detailQuery.isError ? (
-              <Alert
-                type="error"
-                showIcon
-                message={messages.workspace.detailLoadError}
-                description={detailQuery.error.message}
-                style={{ marginBottom: 16 }}
-              />
-            ) : null}
-            {updateMutation.isError ? (
-              <Alert
-                type="error"
-                showIcon
-                message={messages.workspace.updateError}
-                description={updateMutation.error.message}
-                style={{ marginBottom: 16 }}
-              />
-            ) : null}
-            {updateMutation.isSuccess ? (
-              <Alert
-                type="success"
-                showIcon
-                message={messages.workspace.updateSuccess}
-                style={{ marginBottom: 16 }}
-              />
-            ) : null}
-            <NodeDetailForm
-              node={detailQuery.data ?? null}
-              isSubmitting={updateMutation.isPending}
-              onSubmit={handleUpdate}
-            />
-          </Card>
-        </Col>
-      </Row>
-    </Card>
+          />
+        ) : null}
+        {updateMutation.isError ? (
+          <Alert
+            type="error"
+            showIcon
+            message={messages.workspace.updateError}
+            description={updateMutation.error.message}
+            style={{ marginBottom: 16 }}
+          />
+        ) : null}
+        {updateMutation.isSuccess ? (
+          <Alert
+            type="success"
+            showIcon
+            message={messages.workspace.updateSuccess}
+            style={{ marginBottom: 16 }}
+          />
+        ) : null}
+        <NodeDetailForm
+          node={detailQuery.data ?? null}
+          isSubmitting={updateMutation.isPending}
+          onSubmit={handleUpdate}
+        />
+      </Drawer>
+    </>
   );
 }

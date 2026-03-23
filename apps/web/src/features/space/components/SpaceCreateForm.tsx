@@ -6,11 +6,15 @@ import type { CreateSpaceInput } from "../types";
 type SpaceCreateFormProps = {
   isSubmitting: boolean;
   onSubmit: (values: CreateSpaceInput) => void;
+  initialValues?: CreateSpaceInput;
+  submitLabel?: string;
 };
 
 export function SpaceCreateForm({
   isSubmitting,
   onSubmit,
+  initialValues,
+  submitLabel,
 }: SpaceCreateFormProps) {
   const { locale } = useUiLocaleStore();
   const messages = getSpaceMessages(locale).form;
@@ -19,7 +23,7 @@ export function SpaceCreateForm({
     <Form<CreateSpaceInput>
       layout="vertical"
       onFinish={onSubmit}
-      initialValues={{ name: "", description: "" }}
+      initialValues={initialValues ?? { name: "", description: "" }}
     >
       <Form.Item
         label={messages.nameLabel}
@@ -42,7 +46,7 @@ export function SpaceCreateForm({
         />
       </Form.Item>
       <Button type="primary" htmlType="submit" loading={isSubmitting}>
-        {messages.submit}
+        {submitLabel ?? messages.submit}
       </Button>
     </Form>
   );

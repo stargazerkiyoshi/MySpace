@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { CreateSpaceDto } from "../dto/create-space.dto";
+import { UpdateSpaceDto } from "../dto/update-space.dto";
 import {
   SpaceDetailDto,
   SpaceSummaryDto,
@@ -23,6 +24,14 @@ export class SpaceApplicationService {
   async getSpaceDetail(spaceId: string): Promise<SpaceDetailDto> {
     const space = await this.spaceRepository.getSpaceById(spaceId);
     return mapSpace(space);
+  }
+
+  async updateSpace(
+    spaceId: string,
+    input: UpdateSpaceDto,
+  ): Promise<SpaceDetailDto> {
+    const updated = await this.spaceRepository.updateSpace(spaceId, input);
+    return mapSpace(updated);
   }
 }
 

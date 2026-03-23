@@ -42,20 +42,16 @@ export function AppShell() {
         breakpoint="lg"
         collapsed={collapsed}
         collapsedWidth={88}
-        width={272}
+        width={224}
         theme="light"
         className="app-shell__sider"
       >
-        <div className="app-shell__brand">
-          <Typography.Text className="app-shell__eyebrow">
-            {pickMessage(shellMessages.brandEyebrow, locale)}
-          </Typography.Text>
+        <div
+          className={`app-shell__brand${collapsed ? " app-shell__brand--collapsed" : ""}`}
+        >
           <Typography.Title level={3} className="app-shell__title">
-            {pickMessage(shellMessages.brandTitle, locale)}
+            {collapsed ? "MS" : pickMessage(shellMessages.brandTitle, locale)}
           </Typography.Title>
-          <Typography.Paragraph className="app-shell__description">
-            {pickMessage(shellMessages.brandDescription, locale)}
-          </Typography.Paragraph>
         </div>
         <Menu
           mode="inline"

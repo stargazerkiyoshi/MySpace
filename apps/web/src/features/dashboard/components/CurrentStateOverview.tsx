@@ -33,24 +33,19 @@ export function CurrentStateOverview({ dashboard }: CurrentStateOverviewProps) {
           <Typography.Title level={4} style={{ margin: 0 }}>
             {activeSpace.name}
           </Typography.Title>
-          <Typography.Paragraph style={{ marginBottom: 0 }}>
-            {messages.summaryDescription}
-          </Typography.Paragraph>
           <Button type="default">
             <Link to={`/spaces/${activeSpace.id}`}>{messages.openSpace}</Link>
           </Button>
         </Space>
       </Card>
 
-      <Card title={messages.summaryTitle}>
-        <Row gutter={[16, 16]}>
-          {cards.map(({ title, item }) => (
-            <Col xs={24} md={12} key={title}>
-              <HistoryAnchorCard title={title} item={item} spaceId={activeSpace.id} />
-            </Col>
-          ))}
-        </Row>
-      </Card>
+      <Row gutter={[16, 16]}>
+        {cards.map(({ title, item }) => (
+          <Col xs={24} md={12} key={title}>
+            <HistoryAnchorCard title={title} item={item} spaceId={activeSpace.id} />
+          </Col>
+        ))}
+      </Row>
     </Space>
   );
 
@@ -58,27 +53,38 @@ export function CurrentStateOverview({ dashboard }: CurrentStateOverviewProps) {
     title,
     item,
     spaceId,
-  }: {
-    title: string;
-    item: DashboardHistoryNode | null;
-    spaceId: string;
-  }) {
+    }: {
+      title: string;
+      item: DashboardHistoryNode | null;
+      spaceId: string;
+    }) {
     return (
-      <Card size="small" title={title}>
+      <Card size="small" title={title} style={{ height: "100%" }}>
         {!item ? (
           <Typography.Text type="secondary">{messages.noHistoryLink}</Typography.Text>
         ) : (
-          <Space direction="vertical" size="small" style={{ width: "100%" }}>
+          <Space
+            direction="vertical"
+            size="small"
+            style={{ width: "100%", minHeight: 156, justifyContent: "space-between" }}
+          >
             <Space wrap>
               <Tag color={item.isMainline ? "blue" : "orange"}>
                 {item.isMainline ? messages.mainline : messages.branch}
               </Tag>
               <Tag>{item.nodeType}</Tag>
             </Space>
-            <Typography.Title level={5} style={{ margin: 0 }}>
+            <Typography.Title
+              level={5}
+              style={{ margin: 0 }}
+              ellipsis={{ rows: 1, tooltip: item.title }}
+            >
               {item.title}
             </Typography.Title>
-            <Typography.Paragraph style={{ marginBottom: 0 }}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, tooltip: item.summary }}
+              style={{ marginBottom: 0 }}
+            >
               {item.summary}
             </Typography.Paragraph>
             <Typography.Text type="secondary">

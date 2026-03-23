@@ -1,5 +1,5 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { Button, Card, Empty, List, Space, Tag, Typography } from "antd";
+import { Button, Card, Empty, Space, Typography } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { getSpaceMessages } from "../i18n";
 import type { SpaceRecord } from "../types";
@@ -23,36 +23,62 @@ export function SpaceList({ items, onOpen }: SpaceListProps) {
   }
 
   return (
-    <List
-      grid={{ gutter: 16, xs: 1, md: 2 }}
-      dataSource={items}
-      renderItem={(item) => (
-        <List.Item>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+        gap: 16,
+      }}
+    >
+      {items.map((item) => (
+        <div key={item.id} style={{ minWidth: 0 }}>
           <Card
-            title={item.name}
-            extra={<Tag color="blue">{item.slug}</Tag>}
-            actions={[
-              <Button
-                type="link"
-                icon={<ArrowRightOutlined />}
-                onClick={() => onOpen(item.id)}
-                key={`open-${item.id}`}
-              >
-                {messages.open}
-              </Button>,
-            ]}
+            style={{ borderRadius: 16, height: "100%", width: "100%" }}
+            styles={{ body: { height: "100%", padding: 18 } }}
           >
-            <Space direction="vertical" size="small">
-              <Typography.Paragraph style={{ marginBottom: 0, color: "#64748b" }}>
+            <Space
+              direction="vertical"
+              size="small"
+              style={{ width: "100%", minHeight: 132, height: "100%", justifyContent: "space-between" }}
+            >
+              <Space
+                align="start"
+                style={{ width: "100%", justifyContent: "space-between" }}
+              >
+                <Space direction="vertical" size={4} style={{ minWidth: 0, flex: 1 }}>
+                  <Typography.Title
+                    level={5}
+                    style={{ margin: 0 }}
+                    ellipsis={{ rows: 1, tooltip: item.name }}
+                  >
+                    {item.name}
+                  </Typography.Title>
+                </Space>
+                <Button
+                  type="link"
+                  icon={<ArrowRightOutlined />}
+                  onClick={() => onOpen(item.id)}
+                  key={`open-${item.id}`}
+                  style={{ paddingInline: 0, paddingBlock: 0, height: "auto" }}
+                >
+                  {messages.open}
+                </Button>
+              </Space>
+              <Typography.Paragraph
+                ellipsis={{ rows: 2, tooltip: item.description || messages.noDescription }}
+                style={{ marginBottom: 0, color: "#64748b", lineHeight: 1.5 }}
+              >
                 {item.description || messages.noDescription}
               </Typography.Paragraph>
-              <Typography.Text type="secondary">
-                {messages.createdAt} {formatSpaceDate(item.createdAt)}
-              </Typography.Text>
+              <Space wrap style={{ justifyContent: "space-between" }}>
+                <Typography.Text type="secondary">
+                  {messages.createdAt} {formatSpaceDate(item.createdAt)}
+                </Typography.Text>
+              </Space>
             </Space>
           </Card>
-        </List.Item>
-      )}
-    />
+        </div>
+      ))}
+    </div>
   );
 }

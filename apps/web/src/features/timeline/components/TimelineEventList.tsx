@@ -42,32 +42,43 @@ export function TimelineEventList({
           <List.Item
             key={item.id}
             style={{
-              paddingInline: 16,
-              paddingBlock: 16,
-              marginBottom: 12,
-              borderRadius: 12,
-              borderLeft: `4px solid ${tone.borderColor}`,
-              background: selected ? tone.background : "#ffffff",
+              paddingInline: 12,
+              paddingBlock: 14,
+              minHeight: 176,
+              marginBottom: 10,
+              borderRadius: 10,
+              borderLeft: `3px solid ${tone.borderColor}`,
+              background: selected ? tone.background : "#fafafa",
               boxShadow: selected
-                ? "0 8px 24px rgba(15, 23, 42, 0.08)"
-                : "0 1px 3px rgba(15, 23, 42, 0.08)",
+                ? "0 6px 18px rgba(15, 23, 42, 0.08)"
+                : "none",
             }}
             actions={[
-              <Button key="detail" type={selected ? "primary" : "default"} onClick={() => onSelect(item.id)}>
+              <Button
+                key="detail"
+                size="small"
+                type={selected ? "primary" : "default"}
+                onClick={() => onSelect(item.id)}
+              >
                 {selected ? messages.selected : messages.detailTrigger}
               </Button>,
             ]}
           >
-            <Space direction="vertical" size="small" style={{ width: "100%" }}>
+            <Space
+              direction="vertical"
+              size="small"
+              style={{ width: "100%", minHeight: 146, justifyContent: "space-between" }}
+            >
               <Space wrap>
-                <Tag color={tone.color}>{getTimelineNodeTypeLabel(locale, item.nodeType)}</Tag>
                 <Tag color={item.isMainline ? "blue" : "orange"}>
                   {getTimelineStructureLabel(locale, item.isMainline)}
                 </Tag>
-                <Tag>{getTimelineEventTypeLabel(locale, item.eventType)}</Tag>
-                {item.impactSummary ? (
-                  <Tag color="geekblue">{messages.affectsCurrentState}</Tag>
-                ) : null}
+                <Typography.Text type="secondary">
+                  {getTimelineNodeTypeLabel(locale, item.nodeType)}
+                </Typography.Text>
+                <Typography.Text type="secondary">
+                  {getTimelineEventTypeLabel(locale, item.eventType)}
+                </Typography.Text>
                 {isTimelineKeyNode(item) ? (
                   <Tag color="red">{messages.keyNode}</Tag>
                 ) : null}
@@ -75,10 +86,17 @@ export function TimelineEventList({
               <Typography.Text type="secondary">
                 {messages.timeLabel}: {formatTimelineDate(item.createdAt, locale)}
               </Typography.Text>
-              <Typography.Title level={5} style={{ margin: 0 }}>
+              <Typography.Title
+                level={5}
+                style={{ margin: 0 }}
+                ellipsis={{ rows: 1, tooltip: item.title }}
+              >
                 {item.title}
               </Typography.Title>
-              <Typography.Paragraph style={{ marginBottom: 0, color: "#475569" }}>
+              <Typography.Paragraph
+                ellipsis={{ rows: 2, tooltip: getTimelineEventSummary(locale, item) }}
+                style={{ marginBottom: 0, color: "#475569" }}
+              >
                 {getTimelineEventSummary(locale, item)}
               </Typography.Paragraph>
               <Typography.Text type="secondary">
