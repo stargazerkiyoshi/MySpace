@@ -41,7 +41,7 @@ cp .env.example .env
 3. 启动 PostgreSQL 与 Redis
 
 ```bash
-docker compose up -d
+pnpm infra:up
 ```
 
 4. 生成 Prisma Client 并执行初始迁移
@@ -63,6 +63,11 @@ pnpm dev:ai-service
 
 ```bash
 pnpm dev
+pnpm infra:up
+pnpm infra:down
+pnpm infra:restart
+pnpm infra:logs
+pnpm infra:ps
 pnpm build
 pnpm check
 pnpm prisma:generate
