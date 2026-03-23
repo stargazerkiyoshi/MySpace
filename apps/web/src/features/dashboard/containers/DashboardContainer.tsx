@@ -3,7 +3,6 @@ import { PageSection } from "@/shared/ui/PageSection";
 import { DashboardOverview } from "../components/DashboardOverview";
 import { useDashboardQuery } from "../hooks";
 import { getDashboardMessages } from "../i18n";
-import { getDashboardPlaceholderCards } from "../utils";
 
 export function DashboardContainer() {
   const query = useDashboardQuery();
@@ -17,7 +16,7 @@ export function DashboardContainer() {
       badge={messages.badge}
     >
       <DashboardOverview
-        items={getDashboardPlaceholderCards(locale)}
+        dashboard={query.data}
         requestState={query.isError ? "error" : query.isSuccess ? "success" : "idle"}
       />
     </PageSection>

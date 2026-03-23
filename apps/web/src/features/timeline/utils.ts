@@ -2,6 +2,7 @@ import type { UiLocale } from "@/shared/i18n/types";
 import { getNodeStatusLabel } from "@/features/node/utils";
 import type {
   TimelineCard,
+  TimelineImpactType,
   TimelineNodeType,
   TimelineRecord,
   TimelineRelationNode,
@@ -9,7 +10,14 @@ import type {
 import { getTimelineMessages } from "./i18n";
 
 export function getTimelinePlaceholderCards(locale: UiLocale): TimelineCard[] {
-  return getTimelineMessages(locale).cards;
+  const page = getTimelineMessages(locale).page;
+
+  return [
+    {
+      title: page.title,
+      description: page.description,
+    },
+  ];
 }
 
 export function formatTimelineDate(value: string, locale: UiLocale) {
@@ -65,6 +73,24 @@ export function getTimelineStructureLabel(
   return isMainline ? messages.mainline : messages.branch;
 }
 
+export function getTimelineImpactTypeLabel(
+  locale: UiLocale,
+  impactType: TimelineImpactType,
+) {
+  const messages = getTimelineMessages(locale).impactType;
+
+  switch (impactType) {
+    case "diverted":
+      return messages.diverted;
+    case "interrupted":
+      return messages.interrupted;
+    case "inactive":
+      return messages.inactive;
+    default:
+      return messages.progressing;
+  }
+}
+
 export function getTimelineEventSummary(
   locale: UiLocale,
   event: TimelineRecord,
@@ -107,7 +133,7 @@ export function getTimelineNodeTone(nodeType: TimelineNodeType) {
       return { color: "cyan", borderColor: "#22d3ee", background: "#ecfeff" };
     default:
       return { color: "blue", borderColor: "#60a5fa", background: "#eff6ff" };
-  };
+  }
 }
 
 export function isTimelineKeyNode(item: Pick<TimelineRecord, "nodeType">) {

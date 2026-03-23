@@ -5,6 +5,7 @@ import type { TimelineDetailRecord, TimelineRelationNode } from "../types";
 import {
   formatRelationNode,
   formatTimelineDate,
+  getTimelineImpactTypeLabel,
   getTimelineNodeTone,
   getTimelineNodeTypeLabel,
   getTimelineStructureLabel,
@@ -89,6 +90,21 @@ export function TimelineEventDetailPanel({
           </Descriptions.Item>
           <Descriptions.Item label={messages.detail.currentStateRelation}>
             {item.currentStateRelation}
+          </Descriptions.Item>
+          <Descriptions.Item label={messages.detail.impactType}>
+            {getTimelineImpactTypeLabel(locale, item.impactType)}
+          </Descriptions.Item>
+          <Descriptions.Item label={messages.detail.entersCurrentMainline}>
+            {item.entersCurrentMainline ? messages.detail.yes : messages.detail.no}
+          </Descriptions.Item>
+          <Descriptions.Item label={messages.detail.isCurrentStateSource}>
+            {item.isCurrentStateSource ? messages.detail.yes : messages.detail.no}
+          </Descriptions.Item>
+          <Descriptions.Item label={messages.detail.isCurrentMainlineAnchor}>
+            {item.isCurrentMainlineAnchor ? messages.detail.yes : messages.detail.no}
+          </Descriptions.Item>
+          <Descriptions.Item label={messages.detail.isAffectingCurrentState}>
+            {item.isAffectingCurrentState ? messages.detail.yes : messages.detail.no}
           </Descriptions.Item>
           <Descriptions.Item label={messages.detail.isMainline}>
             {item.isMainline ? messages.detail.yes : messages.detail.no}

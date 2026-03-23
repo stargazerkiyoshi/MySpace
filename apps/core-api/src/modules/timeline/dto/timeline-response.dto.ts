@@ -13,10 +13,17 @@ export const timelineNodeTypeValues = [
   "completed",
   "interrupted",
 ] as const;
+export const timelineImpactTypeValues = [
+  "progressing",
+  "diverted",
+  "interrupted",
+  "inactive",
+] as const;
 
 export type TimelineEventTypeValue = (typeof timelineEventTypeValues)[number];
 export type TimelineTargetTypeValue = (typeof timelineTargetTypeValues)[number];
 export type TimelineNodeTypeValue = (typeof timelineNodeTypeValues)[number];
+export type TimelineImpactTypeValue = (typeof timelineImpactTypeValues)[number];
 
 export type TimelineEventPayloadDto = {
   title?: string;
@@ -56,4 +63,9 @@ export class TimelineEventDetailDto extends TimelineEventSummaryDto {
   previousNode!: TimelineRelationNodeDto | null;
   nextNodes!: TimelineRelationNodeDto[];
   currentStateRelation!: string;
+  entersCurrentMainline!: boolean;
+  isCurrentStateSource!: boolean;
+  isCurrentMainlineAnchor!: boolean;
+  isAffectingCurrentState!: boolean;
+  impactType!: TimelineImpactTypeValue;
 }

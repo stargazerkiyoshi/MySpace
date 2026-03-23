@@ -97,6 +97,7 @@ pnpm prisma:migrate:deploy
 - Node update: `PATCH http://localhost:3000/api/nodes/:nodeId`
 - Space timeline list: `GET http://localhost:3000/api/timeline/spaces/:spaceId`
 - Timeline event detail: `GET http://localhost:3000/api/timeline/:eventId`
+- Dashboard current state: `GET http://localhost:3000/api/dashboard`
 - AI service health: `GET http://localhost:3001/health`
 - AI service chat placeholder: `POST http://localhost:3001/chat`
 
@@ -143,6 +144,12 @@ pnpm prisma:migrate:deploy
 - [docs/backend-architecture.md](docs/backend-architecture.md)
 - [docs/ai-service-architecture.md](docs/ai-service-architecture.md)
 - [openspec/project.md](openspec/project.md)
+
+## Current State Linking
+
+- `GET /api/dashboard` returns the active space and the current-state linking summary.
+- The dashboard can link directly to a history node with `/spaces/:spaceId?timelineEvent=:eventId`.
+- Timeline detail now exposes whether a node enters the current mainline, whether it still affects the current state, and its impact type.
 
 ## Current Scope
 

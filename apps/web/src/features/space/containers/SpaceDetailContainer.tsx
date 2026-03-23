@@ -9,10 +9,12 @@ import { getSpaceMessages } from "../i18n";
 
 type SpaceDetailContainerProps = {
   spaceId: string;
+  initialTimelineEventId?: string | null;
 };
 
 export function SpaceDetailContainer({
   spaceId,
+  initialTimelineEventId,
 }: SpaceDetailContainerProps) {
   const query = useSpaceDetailQuery(spaceId);
   const { locale } = useUiLocaleStore();
@@ -41,7 +43,10 @@ export function SpaceDetailContainer({
         <>
           <SpaceDetailPanel space={query.data} />
           <NodeWorkspace spaceId={query.data.id} />
-          <SpaceTimelinePanel spaceId={query.data.id} />
+          <SpaceTimelinePanel
+            spaceId={query.data.id}
+            initialSelectedEventId={initialTimelineEventId}
+          />
         </>
       ) : null}
     </PageSection>

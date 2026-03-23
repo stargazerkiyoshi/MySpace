@@ -20,6 +20,12 @@ export type TimelineNodeType =
   | "completed"
   | "interrupted";
 
+export type TimelineImpactType =
+  | "progressing"
+  | "diverted"
+  | "interrupted"
+  | "inactive";
+
 export type TimelineEventPayload = {
   title?: string;
   nodeType?: NodeType;
@@ -58,4 +64,9 @@ export type TimelineDetailRecord = TimelineRecord & {
   previousNode: TimelineRelationNode | null;
   nextNodes: TimelineRelationNode[];
   currentStateRelation: string;
+  entersCurrentMainline: boolean;
+  isCurrentStateSource: boolean;
+  isCurrentMainlineAnchor: boolean;
+  isAffectingCurrentState: boolean;
+  impactType: TimelineImpactType;
 };

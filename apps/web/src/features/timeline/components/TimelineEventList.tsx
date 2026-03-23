@@ -65,6 +65,9 @@ export function TimelineEventList({
                   {getTimelineStructureLabel(locale, item.isMainline)}
                 </Tag>
                 <Tag>{getTimelineEventTypeLabel(locale, item.eventType)}</Tag>
+                {item.impactSummary ? (
+                  <Tag color="geekblue">{messages.affectsCurrentState}</Tag>
+                ) : null}
                 {isTimelineKeyNode(item) ? (
                   <Tag color="red">{messages.keyNode}</Tag>
                 ) : null}

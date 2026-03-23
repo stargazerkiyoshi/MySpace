@@ -8,9 +8,13 @@ import { getTimelineMessages } from "../i18n";
 
 type SpaceTimelinePanelProps = {
   spaceId: string;
+  initialSelectedEventId?: string | null;
 };
 
-export function SpaceTimelinePanel({ spaceId }: SpaceTimelinePanelProps) {
+export function SpaceTimelinePanel({
+  spaceId,
+  initialSelectedEventId,
+}: SpaceTimelinePanelProps) {
   const query = useTimelineQuery(spaceId);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const detailQuery = useTimelineDetailQuery(selectedEventId);
@@ -26,9 +30,12 @@ export function SpaceTimelinePanel({ spaceId }: SpaceTimelinePanelProps) {
     setSelectedEventId((current) =>
       current && query.data.some((item) => item.id === current)
         ? current
-        : query.data[0].id,
+        : initialSelectedEventId &&
+            query.data.some((item) => item.id === initialSelectedEventId)
+          ? initialSelectedEventId
+          : query.data[0].id,
     );
-  }, [query.data]);
+  }, [initialSelectedEventId, query.data]);
 
   return (
     <Card title={messages.title}>

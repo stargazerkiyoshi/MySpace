@@ -1,15 +1,15 @@
 # OpenSpec 全局状态桥（digest）
-> 用途：为 AI 助手与协作者提供当前仓库的覆盖式状态快照。
+> 用途：为协作者提供当前仓库的覆盖式状态快照。
 > 规则：本文件是快照，不是日志；每次更新直接覆盖旧内容。
 
 ## 1. 快照元信息
-- `snapshot_at`: `2026-03-23`
+- `snapshot_at`: `2026-03-24`
 - `owner`: `Codex`
-- `scope`: `全仓库（时间线详情与主干/分支结构变更已归档，等待 Git 提交）`
+- `scope`: `全仓库（首页状态页与时间线历史节点联动变更已归档，等待 Git 提交）`
 - `status`: `green`
 
 ## 2. 当前目标（Top Goal）
-- `primary_goal`: `提交 add-timeline-node-detail-and-branch-structure 的归档结果并回到稳定基线`
+- `primary_goal`: `提交 link-home-state-to-timeline-history 的归档结果并回到稳定基线`
 - `success_signal`: `无活动 change、主规范同步完成、工作区 clean`
 - `deadline_or_window`: `归档收尾阶段`
 
@@ -18,63 +18,64 @@
 - `change_type`: `spec-impacting`
 - `active_change_ids`: `[]`
 - `active_specs`: `[]`
-- `branch_context`: `main，Timeline 已升级为可查看详情、可区分主干/分支、可表达前后关系的最小历史系统`
+- `branch_context`: `main，系统已从“首页与历史并存”推进到“首页能够解释当前状态来源并回跳关键历史节点”的状态`
 - `git_branch`: `main`
-- `git_head`: `4b63003`
+- `git_head`: `725eb7a`
 - `git_dirty`: `true`
 - `git_changed_files`:
-  - `openspec/changes/archive/2026-03-23-add-timeline-node-detail-and-branch-structure/...`
+  - `openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history/...`
+  - `openspec/specs/current-state-linking/spec.md`
   - `openspec/specs/timeline-management/spec.md`
-  - `openspec/specs/web-app-shell/spec.md`
   - `openspec/specs/space-management/spec.md`
+  - `openspec/specs/web-app-shell/spec.md`
   - `openspec/digest.local.md`
   - `openspec/digest.md`
   - `apps/core-api/...`
   - `apps/web/...`
   - `README.md`
 
-## 4. 当前已确认决策（Current Decisions）
+## 4. 当前决策（Current Decisions）
 - `decisions`:
-  - `Timeline 仍以 TimelineEvent 作为最小历史对象扩展，而不是引入第二套 HistoryNode 模型`
-  - `主干 / 分支结构进入稳定数据模型，由 isMainline、parentNodeId、branchFromNodeId、mergeToNodeId 和 nodeType 表达`
-  - `时间线详情继续承载在 Space 页面内部，不引入独立时间线详情路由`
-  - `当前阶段只建立最小可理解历史结构，不扩展为完整历史树或复杂 merge 逻辑`
+  - `首页状态与时间线历史节点通过稳定的 current-state linking 语义挂接，而不是依赖前端临时推断`
+  - `首页跳转历史节点继续复用 Space 页和 query 参数，不新增独立历史详情路由`
+  - `时间线详情返回结构继续承载当前状态关系字段，供首页和历史页共用`
 
 ## 5. 当前事实状态（Source-of-Truth Snapshot）
-- `spec_status`: `timeline-management、web-app-shell、space-management 主规范已同步新的时间线详情与结构要求`
-- `changes_status`: `add-timeline-node-detail-and-branch-structure 已归档到 openspec/changes/archive/2026-03-23-add-timeline-node-detail-and-branch-structure；当前无其他活动 change`
-- `code_status`: `core-api 已支持时间线详情接口和结构字段；web 已支持列表增强、详情面板、主干/分支视觉区分和最小分支记录入口`
-- `tests_status`: `已完成 Prisma 迁移、前后端 typecheck/build 和真实 API 闭环验证`
+- `spec_status`: `current-state-linking、timeline-management、space-management、web-app-shell 主规范已同步`
+- `changes_status`: `link-home-state-to-timeline-history 已归档到 openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history；当前无其他活动 change`
+- `code_status`: `core-api 已支持 dashboard 当前状态聚合与 timeline 当前状态关系字段；web 已支持首页状态摘要、历史跳转和时间线详情关系展示`
+- `tests_status`: `已完成 core-api typecheck/build 和 web typecheck/build`
 
 ## 6. 阻塞与风险（Blockers / Risks）
 - `blockers`:
   - `无硬阻塞`
 - `risks`:
-  - `本次归档结果和实现代码尚未提交到 Git`
+  - `本次归档结果与实现代码尚未提交到 Git`
 
 ## 7. 待确认事项（Open Questions）
 - `open_questions`:
-  - `下一条业务主线是否优先推进 Snapshot、Sync Candidate，还是更复杂的 Timeline 演化能力，需通过新变更确认`
+  - `下一条业务主线是 Snapshot、Sync Candidate，还是继续强化 Timeline / Current State 演化能力，仍待新变更确认`
 
 ## 8. 已完成事项（Done）
 - `done`:
-  - `已完成 add-timeline-node-detail-and-branch-structure 的实现`
-  - `已完成时间线节点详情、主干/分支字段、前置/后继关系和当前状态影响展示`
-  - `已完成 Node 创建/更新的主干 / 分支记录入口`
-  - `已完成 timeline-management、web-app-shell、space-management 主规范同步`
+  - `已完成首页状态来源摘要与时间线历史节点的最小联动闭环`
+  - `已完成时间线详情对当前状态关系的结构化表达`
+  - `已完成 current-state-linking 新 capability 的主规范落地`
+  - `已完成 link-home-state-to-timeline-history 归档迁移`
 
 ## 9. 下一步动作（Next Actions）
 - `next_actions`:
-  - `[P1] 提交本次时间线详情与主干/分支结构变更及归档结果`
-  - `[P2] 确认工作区恢复 clean`
-  - `[P3] 在新基线上发起下一项 OpenSpec 变更`
+  - `[P1] 提交本次实现、规范同步和归档结果`
+  - `[P2] 提交后确认工作区恢复 clean`
+  - `[P3] 在新的稳定基线上发起下一项 OpenSpec 变更`
 
 ## 10. 关键路径引用（References）
 - `references`:
   - `openspec/project.md`
-  - `openspec/changes/archive/2026-03-23-add-timeline-node-detail-and-branch-structure/proposal.md`
-  - `openspec/changes/archive/2026-03-23-add-timeline-node-detail-and-branch-structure/design.md`
-  - `openspec/changes/archive/2026-03-23-add-timeline-node-detail-and-branch-structure/tasks.md`
+  - `openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history/proposal.md`
+  - `openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history/design.md`
+  - `openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history/tasks.md`
+  - `openspec/specs/current-state-linking/spec.md`
   - `openspec/specs/timeline-management/spec.md`
-  - `openspec/specs/web-app-shell/spec.md`
   - `openspec/specs/space-management/spec.md`
+  - `openspec/specs/web-app-shell/spec.md`

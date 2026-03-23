@@ -1,16 +1,16 @@
 import { Alert } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
-import { PlaceholderGrid } from "@/shared/ui/PlaceholderGrid";
 import { getDashboardMessages } from "../i18n";
-import type { DashboardCard } from "../types";
+import type { DashboardResponse } from "../types";
+import { CurrentStateOverview } from "./CurrentStateOverview";
 
 type DashboardOverviewProps = {
-  items: DashboardCard[];
+  dashboard?: DashboardResponse;
   requestState: "idle" | "error" | "success";
 };
 
 export function DashboardOverview({
-  items,
+  dashboard,
   requestState,
 }: DashboardOverviewProps) {
   const locale = useUiLocaleStore((state) => state.locale);
@@ -19,13 +19,18 @@ export function DashboardOverview({
   return (
     <>
       {requestState === "error" ? (
-        <Alert
-          type="warning"
-          showIcon
-          message={messages.requestError}
-        />
+        <Alert type="warning" showIcon message={messages.requestError} />
       ) : null}
-      <PlaceholderGrid items={items} />
+      <CurrentStateOverview
+        dashboard={
+          dashboard ?? {
+            module: "dashboard",
+            status: "empty",
+            activeSpace: null,
+            currentState: null,
+          }
+        }
+      />
     </>
   );
 }

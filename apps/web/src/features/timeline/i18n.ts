@@ -4,21 +4,20 @@ import type { UiLocale } from "@/shared/i18n/types";
 const messages = {
   page: {
     title: {
-      "zh-CN": "时间线占位页",
-      en: "Timeline Placeholder",
+      "zh-CN": "时间线",
+      en: "Timeline",
     },
     description: {
-      "zh-CN":
-        "独立时间线页仍保留为后续能力入口，当前最小闭环承载在具体 Space 页面内。",
-      en: "The standalone timeline page remains a future entry point, while the current minimal loop lives inside each Space page.",
+      "zh-CN": "独立时间线页仍保留为后续入口，当前最小历史闭环承载在具体 Space 页面内。",
+      en: "The standalone timeline page remains a future entry point. The current minimum history loop lives inside each Space page.",
     },
     badge: {
       "zh-CN": "时间线",
       en: "Timeline",
     },
     requestError: {
-      "zh-CN": "独立时间线页当前没有单独数据入口。",
-      en: "The standalone timeline page does not have a dedicated data entry yet.",
+      "zh-CN": "当前还没有独立时间线页面的数据入口。",
+      en: "The standalone timeline page does not have a dedicated data source yet.",
     },
   },
   widget: {
@@ -27,9 +26,8 @@ const messages = {
       en: "Recent History",
     },
     description: {
-      "zh-CN":
-        "这里展示当前空间最近发生的关键变化，帮助你看清主线、分支和关键决策。",
-      en: "This section shows the latest changes in the current space so you can understand the mainline, branches, and key decisions.",
+      "zh-CN": "这里展示当前空间最近发生的关键变化，帮助你理解主线、分支，以及它们与当前状态的关系。",
+      en: "This section shows the latest changes in the current space so you can understand the mainline, branches, and their relation to the current state.",
     },
     empty: {
       "zh-CN": "当前空间还没有可展示的时间线节点。先创建或更新一个节点。",
@@ -67,14 +65,18 @@ const messages = {
       "zh-CN": "关键节点",
       en: "Key Node",
     },
+    affectsCurrentState: {
+      "zh-CN": "影响当前状态",
+      en: "Affects Current State",
+    },
   },
   detail: {
     title: {
-      "zh-CN": "节点详情",
-      en: "Node Detail",
+      "zh-CN": "历史节点详情",
+      en: "History Node Detail",
     },
     empty: {
-      "zh-CN": "选择一个时间线节点后，这里会展示它的结构关系和影响说明。",
+      "zh-CN": "选择一个时间线节点后，这里会展示它的结构关系和对当前状态的影响。",
       en: "Select a timeline event to inspect its structure and impact.",
     },
     summary: {
@@ -133,6 +135,26 @@ const messages = {
       "zh-CN": "当前未设置",
       en: "Not set yet",
     },
+    impactType: {
+      "zh-CN": "影响类型",
+      en: "Impact Type",
+    },
+    entersCurrentMainline: {
+      "zh-CN": "是否进入当前主线",
+      en: "Enters Current Mainline",
+    },
+    isCurrentStateSource: {
+      "zh-CN": "是否是当前状态来源",
+      en: "Is Current State Source",
+    },
+    isCurrentMainlineAnchor: {
+      "zh-CN": "是否是当前主线锚点",
+      en: "Is Current Mainline Anchor",
+    },
+    isAffectingCurrentState: {
+      "zh-CN": "是否仍影响当前状态",
+      en: "Still Affects Current State",
+    },
   },
   structure: {
     mainline: {
@@ -184,36 +206,22 @@ const messages = {
       en: "Status Changed",
     },
   },
-  cards: {
-    activity: {
-      title: {
-        "zh-CN": "活动流",
-        en: "Activity Stream",
-      },
-      description: {
-        "zh-CN": "未来承载跨空间时间线入口。",
-        en: "Will host a broader activity stream entry in the future.",
-      },
+  impactType: {
+    progressing: {
+      "zh-CN": "推进",
+      en: "Progressing",
     },
-    snapshots: {
-      title: {
-        "zh-CN": "快照",
-        en: "Snapshots",
-      },
-      description: {
-        "zh-CN": "未来承载阶段状态切片。",
-        en: "Will host stage-based state snapshots in the future.",
-      },
+    diverted: {
+      "zh-CN": "偏移",
+      en: "Diverted",
     },
-    historyTree: {
-      title: {
-        "zh-CN": "历史树",
-        en: "History Tree",
-      },
-      description: {
-        "zh-CN": "当前只建立最小结构，不做完整树状可视化。",
-        en: "The current change only adds minimal structure, not a full tree visualization.",
-      },
+    interrupted: {
+      "zh-CN": "中断",
+      en: "Interrupted",
+    },
+    inactive: {
+      "zh-CN": "已失效",
+      en: "Inactive",
     },
   },
 } as const;
@@ -238,6 +246,7 @@ export function getTimelineMessages(locale: UiLocale) {
       detailTrigger: pickMessage(messages.widget.detailTrigger, locale),
       selected: pickMessage(messages.widget.selected, locale),
       keyNode: pickMessage(messages.widget.keyNode, locale),
+      affectsCurrentState: pickMessage(messages.widget.affectsCurrentState, locale),
     },
     detail: {
       title: pickMessage(messages.detail.title, locale),
@@ -256,6 +265,11 @@ export function getTimelineMessages(locale: UiLocale) {
       yes: pickMessage(messages.detail.yes, locale),
       no: pickMessage(messages.detail.no, locale),
       notPlanned: pickMessage(messages.detail.notPlanned, locale),
+      impactType: pickMessage(messages.detail.impactType, locale),
+      entersCurrentMainline: pickMessage(messages.detail.entersCurrentMainline, locale),
+      isCurrentStateSource: pickMessage(messages.detail.isCurrentStateSource, locale),
+      isCurrentMainlineAnchor: pickMessage(messages.detail.isCurrentMainlineAnchor, locale),
+      isAffectingCurrentState: pickMessage(messages.detail.isAffectingCurrentState, locale),
     },
     structure: {
       mainline: pickMessage(messages.structure.mainline, locale),
@@ -274,19 +288,11 @@ export function getTimelineMessages(locale: UiLocale) {
       nodeUpdated: pickMessage(messages.eventType.nodeUpdated, locale),
       nodeStatusChanged: pickMessage(messages.eventType.nodeStatusChanged, locale),
     },
-    cards: [
-      {
-        title: pickMessage(messages.cards.activity.title, locale),
-        description: pickMessage(messages.cards.activity.description, locale),
-      },
-      {
-        title: pickMessage(messages.cards.snapshots.title, locale),
-        description: pickMessage(messages.cards.snapshots.description, locale),
-      },
-      {
-        title: pickMessage(messages.cards.historyTree.title, locale),
-        description: pickMessage(messages.cards.historyTree.description, locale),
-      },
-    ],
+    impactType: {
+      progressing: pickMessage(messages.impactType.progressing, locale),
+      diverted: pickMessage(messages.impactType.diverted, locale),
+      interrupted: pickMessage(messages.impactType.interrupted, locale),
+      inactive: pickMessage(messages.impactType.inactive, locale),
+    },
   };
 }

@@ -1,6 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import type { Prisma } from "@prisma/client";
 import {
+  buildCurrentStateLinkingSnapshot,
+  resolveCurrentStateTimelineRelation,
+  type CurrentStateLinkingEvent,
+  type TimelineImpactTypeValue,
+} from "./current-state-linking";
+import {
   TimelineEventDetailDto,
   TimelineEventSummaryDto,
   TimelineRelationNodeDto,
@@ -43,7 +49,12 @@ export class TimelineApplicationService {
     eventId: string,
   ): Promise<TimelineEventDetailDto> {
     const item = await this.timelineRepository.getTimelineEventDetail(eventId);
-    return mapTimelineEventDetail(item);
+    const spaceTimeline = await this.timelineRepository.listSpaceTimeline(item.spaceId);
+    const snapshot = buildCurrentStateLinkingSnapshot(
+      spaceTimeline.map((timelineItem) => toCurrentStateLinkingEvent(timelineItem)),
+    );
+
+    return mapTimelineEventDetail(item, snapshot);
   }
 
   async recordNodeCreated(
@@ -235,7 +246,8 @@ function mapTimelineEvent(item: {
   };
 }
 
-function mapTimelineEventDetail(item: {
+function mapTimelineEventDetail(
+  item: {
   id: string;
   spaceId: string;
   eventType: string;
@@ -266,14 +278,25 @@ function mapTimelineEventDetail(item: {
     isMainline: boolean;
     createdAt: Date;
   }>;
-}): TimelineEventDetailDto {
+},
+  snapshot: ReturnType<typeof buildCurrentStateLinkingSnapshot>,
+): TimelineEventDetailDto {
   const summary = mapTimelineEvent(item);
+  const relation = resolveCurrentStateTimelineRelation(
+    toCurrentStateLinkingEvent(item),
+    snapshot,
+  );
 
   return {
     ...summary,
     previousNode: item.previousNode ? mapRelationNode(item.previousNode) : null,
     nextNodes: item.nextNodes.map(mapRelationNode),
-    currentStateRelation: getCurrentStateRelation(summary),
+    currentStateRelation: getCurrentStateRelation(summary, relation),
+    entersCurrentMainline: relation.entersCurrentMainline,
+    isCurrentStateSource: relation.isCurrentStateSource,
+    isCurrentMainlineAnchor: relation.isCurrentMainlineAnchor,
+    isAffectingCurrentState: relation.isAffectingCurrentState,
+    impactType: relation.impactType,
   };
 }
 
@@ -356,9 +379,31 @@ function getCurrentStateRelation(
     TimelineEventSummaryDto,
     "isMainline" | "mergeToNodeId" | "nodeType"
   >,
+  relation: {
+    isCurrentStateSource: boolean;
+    isCurrentMainlineAnchor: boolean;
+    isAffectingCurrentState: boolean;
+    impactType: TimelineImpactTypeValue;
+  },
 ) {
+  if (relation.isCurrentStateSource) {
+    return "This node is the current state source for the space.";
+  }
+
+  if (relation.isCurrentMainlineAnchor) {
+    return "This node is the current mainline anchor for the space.";
+  }
+
+  if (relation.isAffectingCurrentState) {
+    return "This node still affects the current state of the space.";
+  }
+
+  if (relation.impactType === "interrupted") {
+    return "This node no longer drives the current state because the path was interrupted.";
+  }
+
   if (item.isMainline) {
-    return "This node is part of the current mainline.";
+    return "This node belongs to an older mainline segment and no longer drives the current state.";
   }
 
   if (item.mergeToNodeId) {
@@ -370,4 +415,32 @@ function getCurrentStateRelation(
   }
 
   return "This node belongs to a side branch and does not directly represent the active mainline.";
+}
+
+function toCurrentStateLinkingEvent(item: {
+  id: string;
+  spaceId: string;
+  targetId: string;
+  title: string;
+  summary: string;
+  nodeType: string;
+  isMainline: boolean;
+  parentNodeId: string | null;
+  branchFromNodeId: string | null;
+  mergeToNodeId: string | null;
+  createdAt: Date;
+}): CurrentStateLinkingEvent {
+  return {
+    id: item.id,
+    spaceId: item.spaceId,
+    targetId: item.targetId,
+    title: item.title,
+    summary: item.summary,
+    nodeType: item.nodeType,
+    isMainline: item.isMainline,
+    parentNodeId: item.parentNodeId,
+    branchFromNodeId: item.branchFromNodeId,
+    mergeToNodeId: item.mergeToNodeId,
+    createdAt: item.createdAt,
+  };
 }
