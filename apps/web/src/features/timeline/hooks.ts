@@ -1,10 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchTimeline } from "./api";
+import { fetchSpaceTimeline } from "./api";
 
-export function useTimelineQuery() {
+export const timelineKeys = {
+  all: ["timeline"] as const,
+  list: (spaceId: string) => [...timelineKeys.all, "list", spaceId] as const,
+};
+
+export function useTimelineQuery(spaceId: string) {
   return useQuery({
-    queryKey: ["timeline", "list"],
-    queryFn: fetchTimeline,
+    queryKey: timelineKeys.list(spaceId),
+    queryFn: () => fetchSpaceTimeline(spaceId),
+    enabled: Boolean(spaceId),
     retry: false,
   });
 }

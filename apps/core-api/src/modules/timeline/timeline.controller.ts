@@ -1,13 +1,14 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
+import { TimelineApplicationService } from "./application/timeline.application.service";
 
 @Controller("timeline")
 export class TimelineController {
-  @Get()
-  getTimeline() {
-    return {
-      module: "timeline",
-      status: "placeholder",
-      items: [],
-    };
+  constructor(
+    private readonly timelineApplicationService: TimelineApplicationService,
+  ) {}
+
+  @Get("spaces/:spaceId")
+  getSpaceTimeline(@Param("spaceId") spaceId: string) {
+    return this.timelineApplicationService.listSpaceTimeline(spaceId);
   }
 }

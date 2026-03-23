@@ -1,5 +1,6 @@
 import { Alert, Card, Skeleton } from "antd";
 import { NodeWorkspace } from "@/features/node/containers/NodeWorkspace";
+import { SpaceTimelinePanel } from "@/features/timeline/containers/SpaceTimelinePanel";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { PageSection } from "@/shared/ui/PageSection";
 import { SpaceDetailPanel } from "../components/SpaceDetailPanel";
@@ -40,6 +41,7 @@ export function SpaceDetailContainer({
         <>
           <SpaceDetailPanel space={query.data} />
           <NodeWorkspace spaceId={query.data.id} />
+          <SpaceTimelinePanel spaceId={query.data.id} />
         </>
       ) : null}
     </PageSection>

@@ -1,5 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import type { Node, NodeStatus, NodeType, Space, User } from "@prisma/client";
+import type {
+  Node,
+  NodeStatus,
+  NodeType,
+  Prisma,
+  Space,
+  User,
+} from "@prisma/client";
 import { PrismaService } from "../../../infrastructure/database/prisma.service";
 import { CreateNodeDto } from "../dto/create-node.dto";
 import { UpdateNodeDto } from "../dto/update-node.dto";
@@ -11,11 +18,15 @@ const DEFAULT_OWNER_DISPLAY_NAME = "Space Owner";
 export class NodeRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createNode(spaceId: string, input: CreateNodeDto): Promise<Node> {
-    const owner = await this.ensureDefaultOwner();
-    const space = await this.getOwnedSpace(spaceId, owner.id);
+  async createNode(
+    spaceId: string,
+    input: CreateNodeDto,
+    executor: PrismaService | Prisma.TransactionClient = this.prisma,
+  ): Promise<Node> {
+    const owner = await this.ensureDefaultOwner(executor);
+    const space = await this.getOwnedSpace(spaceId, owner.id, executor);
 
-    return this.prisma.node.create({
+    return executor.node.create({
       data: {
         spaceId: space.id,
         title: input.title.trim(),
@@ -26,11 +37,14 @@ export class NodeRepository {
     });
   }
 
-  async listNodes(spaceId: string): Promise<Node[]> {
-    const owner = await this.ensureDefaultOwner();
-    const space = await this.getOwnedSpace(spaceId, owner.id);
+  async listNodes(
+    spaceId: string,
+    executor: PrismaService | Prisma.TransactionClient = this.prisma,
+  ): Promise<Node[]> {
+    const owner = await this.ensureDefaultOwner(executor);
+    const space = await this.getOwnedSpace(spaceId, owner.id, executor);
 
-    return this.prisma.node.findMany({
+    return executor.node.findMany({
       where: {
         spaceId: space.id,
       },
@@ -40,9 +54,12 @@ export class NodeRepository {
     });
   }
 
-  async getNodeById(nodeId: string): Promise<Node> {
-    const owner = await this.ensureDefaultOwner();
-    const node = await this.prisma.node.findFirst({
+  async getNodeById(
+    nodeId: string,
+    executor: PrismaService | Prisma.TransactionClient = this.prisma,
+  ): Promise<Node> {
+    const owner = await this.ensureDefaultOwner(executor);
+    const node = await executor.node.findFirst({
       where: {
         id: nodeId,
         space: {
@@ -58,10 +75,14 @@ export class NodeRepository {
     return node;
   }
 
-  async updateNode(nodeId: string, input: UpdateNodeDto): Promise<Node> {
-    await this.getNodeById(nodeId);
+  async updateNode(
+    nodeId: string,
+    input: UpdateNodeDto,
+    executor: PrismaService | Prisma.TransactionClient = this.prisma,
+  ): Promise<Node> {
+    await this.getNodeById(nodeId, executor);
 
-    return this.prisma.node.update({
+    return executor.node.update({
       where: {
         id: nodeId,
       },
@@ -80,8 +101,12 @@ export class NodeRepository {
     });
   }
 
-  private async getOwnedSpace(spaceId: string, ownerId: string): Promise<Space> {
-    const space = await this.prisma.space.findFirst({
+  private async getOwnedSpace(
+    spaceId: string,
+    ownerId: string,
+    executor: PrismaService | Prisma.TransactionClient,
+  ): Promise<Space> {
+    const space = await executor.space.findFirst({
       where: {
         id: spaceId,
         ownerId,
@@ -95,8 +120,10 @@ export class NodeRepository {
     return space;
   }
 
-  private async ensureDefaultOwner(): Promise<User> {
-    return this.prisma.user.upsert({
+  private async ensureDefaultOwner(
+    executor: PrismaService | Prisma.TransactionClient,
+  ): Promise<User> {
+    return executor.user.upsert({
       where: {
         email: DEFAULT_OWNER_EMAIL,
       },

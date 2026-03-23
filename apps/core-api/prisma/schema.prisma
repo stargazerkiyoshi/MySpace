@@ -24,6 +24,16 @@ enum NodeStatus {
   DONE
 }
 
+enum TimelineEventType {
+  NODE_CREATED
+  NODE_UPDATED
+  NODE_STATUS_CHANGED
+}
+
+enum TimelineTargetType {
+  NODE
+}
+
 model User {
   id          String      @id @default(cuid())
   email       String      @unique
@@ -72,18 +82,21 @@ model Node {
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
   space      Space           @relation(fields: [spaceId], references: [id])
-  timeline   TimelineEvent[]
 
   @@index([spaceId, updatedAt])
 }
 
 model TimelineEvent {
-  id        String   @id @default(cuid())
+  id         String             @id @default(cuid())
   spaceId    String
-  nodeId     String?
-  type       String
+  eventType  TimelineEventType
+  targetType TimelineTargetType
+  targetId   String
+  summary    String
   payload    Json?
-  createdAt  DateTime @default(now())
-  node       Node?    @relation(fields: [nodeId], references: [id])
-  space      Space    @relation(fields: [spaceId], references: [id])
+  createdAt  DateTime           @default(now())
+  space      Space              @relation(fields: [spaceId], references: [id])
+
+  @@index([spaceId, createdAt])
+  @@index([targetType, targetId, createdAt])
 }

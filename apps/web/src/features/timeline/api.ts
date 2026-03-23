@@ -1,7 +1,7 @@
 import { http } from "@/shared/lib/http";
-import type { TimelineResponse } from "./types";
+import type { TimelineRecord } from "./types";
 
-export async function fetchTimeline() {
-  const { data } = await http.get<TimelineResponse>("/timeline");
+export async function fetchSpaceTimeline(spaceId: string) {
+  const { data } = await http.get<TimelineRecord[]>(`/timeline/spaces/${spaceId}`);
   return data;
 }

@@ -86,6 +86,7 @@ pnpm prisma:migrate:deploy
 - Space node create: `POST http://localhost:3000/api/spaces/:spaceId/nodes`
 - Node detail: `GET http://localhost:3000/api/nodes/:nodeId`
 - Node update: `PATCH http://localhost:3000/api/nodes/:nodeId`
+- Space timeline list: `GET http://localhost:3000/api/timeline/spaces/:spaceId`
 - AI service health: `http://localhost:3001/health`
 - AI service chat placeholder: `POST http://localhost:3001/chat`
 
