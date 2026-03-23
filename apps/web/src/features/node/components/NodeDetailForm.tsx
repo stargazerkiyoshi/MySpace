@@ -7,6 +7,7 @@ import {
   Input,
   Select,
   Space,
+  Switch,
   Typography,
 } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
@@ -38,6 +39,7 @@ export function NodeDetailForm({
         content: node.content ?? "",
         nodeType: node.nodeType,
         status: node.status,
+        isMainline: true,
       });
     } else {
       form.resetFields();
@@ -115,6 +117,17 @@ export function NodeDetailForm({
               { value: "doing", label: messages.statusOptions.doing },
               { value: "done", label: messages.statusOptions.done },
             ]}
+          />
+        </Form.Item>
+        <Form.Item
+        label={messages.form.branchModeLabel}
+        name="isMainline"
+        valuePropName="checked"
+        extra={messages.form.branchModeHelp}
+        >
+          <Switch
+            checkedChildren={messages.form.mainlineOn}
+            unCheckedChildren={messages.form.mainlineOff}
           />
         </Form.Item>
         <Button type="primary" htmlType="submit" loading={isSubmitting}>

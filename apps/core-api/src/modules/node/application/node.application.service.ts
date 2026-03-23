@@ -25,6 +25,12 @@ export class NodeApplicationService {
           title: created.title,
           nodeType: created.nodeType.toLowerCase(),
           status: created.status.toLowerCase(),
+          description: created.content,
+          impactSummary:
+            input.isMainline === false
+              ? `This node opens a side path from the current mainline of the space.`
+              : `This node extends the active mainline for the space.`,
+          isMainline: input.isMainline ?? true,
         },
         tx,
       );
@@ -58,6 +64,12 @@ export class NodeApplicationService {
             nodeType: node.nodeType.toLowerCase(),
             status: node.status.toLowerCase(),
             previousStatus: existing.status.toLowerCase(),
+            description: node.content,
+            impactSummary:
+              input.isMainline === false
+                ? `This status change belongs to a branch path rather than the active mainline.`
+                : undefined,
+            isMainline: input.isMainline ?? true,
           },
           tx,
         );
@@ -69,6 +81,12 @@ export class NodeApplicationService {
             title: node.title,
             nodeType: node.nodeType.toLowerCase(),
             status: node.status.toLowerCase(),
+            description: node.content,
+            impactSummary:
+              input.isMainline === false
+                ? `This update refines a branch path that is currently outside the active mainline.`
+                : undefined,
+            isMainline: input.isMainline ?? true,
           },
           tx,
         );

@@ -22,6 +22,7 @@ export type CreateNodeInput = {
   content?: string;
   nodeType: NodeType;
   status: NodeStatus;
+  isMainline?: boolean;
 };
 
 export type UpdateNodeInput = Partial<CreateNodeInput>;

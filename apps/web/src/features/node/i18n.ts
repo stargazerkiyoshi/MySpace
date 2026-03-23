@@ -4,11 +4,12 @@ import type { UiLocale } from "@/shared/i18n/types";
 const messages = {
   page: {
     title: {
-      "zh-CN": "节点占位",
+      "zh-CN": "节点占位页",
       en: "Nodes Placeholder",
     },
     description: {
-      "zh-CN": "该页面保留为节点独立工作区的后续入口。当前 Node 的最小业务闭环承载在具体 Space 页面内。",
+      "zh-CN":
+        "该页面保留为节点独立工作区的后续入口。当前 Node 的最小业务闭环承载在具体 Space 页面内。",
       en: "This page remains reserved as a future standalone node workspace. The current minimum node loop lives inside each Space page.",
     },
     badge: {
@@ -116,8 +117,8 @@ const messages = {
       en: "Node title must be 120 characters or less.",
     },
     titlePlaceholder: {
-      "zh-CN": "例如：梳理发布计划",
-      en: "For example: Outline the launch plan",
+      "zh-CN": "例如：梳理发布时间线",
+      en: "For example: Outline the launch timeline",
     },
     contentLabel: {
       "zh-CN": "内容",
@@ -138,6 +139,22 @@ const messages = {
     statusLabel: {
       "zh-CN": "状态",
       en: "Status",
+    },
+    branchModeLabel: {
+      "zh-CN": "主干记录",
+      en: "Mainline record",
+    },
+    branchModeHelp: {
+      "zh-CN": "开启时记录为主干推进，关闭时记录为分支路径。",
+      en: "When on, the event is recorded on the mainline. When off, it is recorded as a branch path.",
+    },
+    mainlineOn: {
+      "zh-CN": "主干",
+      en: "Mainline",
+    },
+    mainlineOff: {
+      "zh-CN": "分支",
+      en: "Branch",
     },
     submitCreate: {
       "zh-CN": "创建节点",
@@ -268,6 +285,10 @@ export function getNodeMessages(locale: UiLocale) {
       contentPlaceholder: pickMessage(messages.form.contentPlaceholder, locale),
       typeLabel: pickMessage(messages.form.typeLabel, locale),
       statusLabel: pickMessage(messages.form.statusLabel, locale),
+      branchModeLabel: pickMessage(messages.form.branchModeLabel, locale),
+      branchModeHelp: pickMessage(messages.form.branchModeHelp, locale),
+      mainlineOn: pickMessage(messages.form.mainlineOn, locale),
+      mainlineOff: pickMessage(messages.form.mainlineOff, locale),
       submitCreate: pickMessage(messages.form.submitCreate, locale),
       submitUpdate: pickMessage(messages.form.submitUpdate, locale),
     },

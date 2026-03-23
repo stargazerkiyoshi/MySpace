@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsEnum, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { nodeStatusValues, nodeTypeValues, type NodeStatusValue, type NodeTypeValue } from "./create-node.dto";
 
 export class UpdateNodeDto {
@@ -23,4 +23,8 @@ export class UpdateNodeDto {
   @IsOptional()
   @IsEnum(nodeStatusValues)
   status?: NodeStatusValue;
+
+  @IsOptional()
+  @IsBoolean()
+  isMainline?: boolean;
 }

@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, Switch } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { getNodeMessages } from "../i18n";
 import type { CreateNodeInput } from "../types";
@@ -23,6 +23,7 @@ export function NodeCreateForm({
       initialValues={{
         nodeType: "note",
         status: "todo",
+        isMainline: true,
       }}
       onFinish={onSubmit}
     >
@@ -59,6 +60,17 @@ export function NodeCreateForm({
             { value: "doing", label: messages.statusOptions.doing },
             { value: "done", label: messages.statusOptions.done },
           ]}
+        />
+      </Form.Item>
+      <Form.Item
+        label={messages.form.branchModeLabel}
+        name="isMainline"
+        valuePropName="checked"
+        extra={messages.form.branchModeHelp}
+      >
+        <Switch
+          checkedChildren={messages.form.mainlineOn}
+          unCheckedChildren={messages.form.mainlineOff}
         />
       </Form.Item>
       <Button type="primary" htmlType="submit" loading={isSubmitting}>

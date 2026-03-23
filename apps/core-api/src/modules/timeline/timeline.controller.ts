@@ -11,4 +11,9 @@ export class TimelineController {
   getSpaceTimeline(@Param("spaceId") spaceId: string) {
     return this.timelineApplicationService.listSpaceTimeline(spaceId);
   }
+
+  @Get(":eventId")
+  getTimelineEventDetail(@Param("eventId") eventId: string) {
+    return this.timelineApplicationService.getTimelineEventDetail(eventId);
+  }
 }

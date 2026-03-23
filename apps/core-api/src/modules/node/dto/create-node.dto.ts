@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsEnum, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export const nodeTypeValues = ["note", "task", "decision"] as const;
 export const nodeStatusValues = ["todo", "doing", "done"] as const;
@@ -25,4 +25,8 @@ export class CreateNodeDto {
 
   @IsEnum(nodeStatusValues)
   status!: NodeStatusValue;
+
+  @IsOptional()
+  @IsBoolean()
+  isMainline?: boolean;
 }

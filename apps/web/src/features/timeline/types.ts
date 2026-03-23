@@ -12,6 +12,14 @@ export type TimelineEventType =
 
 export type TimelineTargetType = "node";
 
+export type TimelineNodeType =
+  | "mainline_progress"
+  | "branch_created"
+  | "decision"
+  | "external_event"
+  | "completed"
+  | "interrupted";
+
 export type TimelineEventPayload = {
   title?: string;
   nodeType?: NodeType;
@@ -19,14 +27,35 @@ export type TimelineEventPayload = {
   previousStatus?: NodeStatus;
 } | null;
 
+export type TimelineRelationNode = {
+  id: string;
+  title: string;
+  nodeType: TimelineNodeType;
+  isMainline: boolean;
+  createdAt: string;
+};
+
 export type TimelineRecord = {
   id: string;
   spaceId: string;
   eventType: TimelineEventType;
   targetType: TimelineTargetType;
   targetId: string;
-  targetTitle: string | null;
+  nodeType: TimelineNodeType;
+  title: string;
   summary: string;
+  description: string | null;
+  impactSummary: string | null;
+  isMainline: boolean;
+  parentNodeId: string | null;
+  branchFromNodeId: string | null;
+  mergeToNodeId: string | null;
   payload: TimelineEventPayload;
   createdAt: string;
+};
+
+export type TimelineDetailRecord = TimelineRecord & {
+  previousNode: TimelineRelationNode | null;
+  nextNodes: TimelineRelationNode[];
+  currentStateRelation: string;
 };
