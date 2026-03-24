@@ -1,7 +1,9 @@
 import { Alert, Card, Skeleton, Tabs } from "antd";
+import { NodeGraphWorkspace } from "@/features/node/containers/NodeGraphWorkspace";
 import { NodeWorkspace } from "@/features/node/containers/NodeWorkspace";
 import { SpaceTimelinePanel } from "@/features/timeline/containers/SpaceTimelinePanel";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
+import { getNodeMessages } from "@/features/node/i18n";
 import { SpaceDetailPanel } from "../components/SpaceDetailPanel";
 import { useSpaceDetailQuery, useUpdateSpaceMutation } from "../hooks";
 import type { UpdateSpaceInput } from "../types";
@@ -18,14 +20,17 @@ export function SpaceDetailContainer({
   const query = useSpaceDetailQuery(spaceId);
   const updateMutation = useUpdateSpaceMutation(spaceId);
   const { locale } = useUiLocaleStore();
+  const nodeMessages = getNodeMessages(locale);
   const tabMessages =
     locale === "zh-CN"
       ? {
           nodeTab: "节点",
+          graphTab: nodeMessages.graph.tab,
           historyTab: "最近变化",
         }
       : {
           nodeTab: "Nodes",
+          graphTab: nodeMessages.graph.tab,
           historyTab: "Recent History",
         };
 
@@ -76,11 +81,17 @@ export function SpaceDetailContainer({
       >
         <Tabs
           defaultActiveKey={initialTimelineEventId ? "history" : "nodes"}
+          destroyOnHidden
           items={[
             {
               key: "nodes",
               label: tabMessages.nodeTab,
               children: <NodeWorkspace spaceId={query.data.id} />,
+            },
+            {
+              key: "graph",
+              label: tabMessages.graphTab,
+              children: <NodeGraphWorkspace spaceId={query.data.id} />,
             },
             {
               key: "history",

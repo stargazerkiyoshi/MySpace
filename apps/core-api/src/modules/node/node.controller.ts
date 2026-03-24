@@ -22,6 +22,11 @@ export class NodeController {
     return this.nodeApplicationService.listNodes(spaceId);
   }
 
+  @Get("spaces/:spaceId/node-graph")
+  getNodeGraph(@Param("spaceId") spaceId: string) {
+    return this.nodeApplicationService.getNodeGraph(spaceId);
+  }
+
   @Get("nodes/:nodeId")
   getNodeDetail(@Param("nodeId") nodeId: string) {
     return this.nodeApplicationService.getNodeDetail(nodeId);

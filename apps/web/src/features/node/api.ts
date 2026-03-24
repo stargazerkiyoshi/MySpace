@@ -1,5 +1,10 @@
 import { http } from "@/shared/lib/http";
-import type { CreateNodeInput, NodeRecord, UpdateNodeInput } from "./types";
+import type {
+  CreateNodeInput,
+  NodeGraphRecord,
+  NodeRecord,
+  UpdateNodeInput,
+} from "./types";
 
 export async function fetchSpaceNodes(spaceId: string) {
   const { data } = await http.get<NodeRecord[]>(`/spaces/${spaceId}/nodes`);
@@ -8,6 +13,11 @@ export async function fetchSpaceNodes(spaceId: string) {
 
 export async function fetchNodeDetail(nodeId: string) {
   const { data } = await http.get<NodeRecord>(`/nodes/${nodeId}`);
+  return data;
+}
+
+export async function fetchSpaceNodeGraph(spaceId: string) {
+  const { data } = await http.get<NodeGraphRecord>(`/spaces/${spaceId}/node-graph`);
   return data;
 }
 

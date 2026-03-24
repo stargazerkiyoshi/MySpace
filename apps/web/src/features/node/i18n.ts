@@ -103,6 +103,80 @@ const messages = {
       en: "Select a node, or create a new one first.",
     },
   },
+  graph: {
+    tab: {
+      "zh-CN": "结构视图",
+      en: "Graph",
+    },
+    title: {
+      "zh-CN": "节点结构视图",
+      en: "Node Structure View",
+    },
+    description: {
+      "zh-CN": "基于当前空间中的真实节点数据浏览结构分布，并为后续关系扩展预留入口。",
+      en: "Browse the structural view with real node data from this space and keep room for richer relations later.",
+    },
+    loadError: {
+      "zh-CN": "节点结构视图加载失败",
+      en: "Failed to load the node graph",
+    },
+    empty: {
+      "zh-CN": "当前空间还没有节点，结构视图会在创建节点后出现。",
+      en: "There are no nodes in this space yet. The graph view will appear after nodes are created.",
+    },
+    emptyRelations: {
+      "zh-CN": "当前空间还没有可识别的节点关系，首版仅展示真实节点分布。",
+      en: "There are no recognizable node relations in this space yet, so the MVP only shows real nodes.",
+    },
+    stats: {
+      "zh-CN": "已加载 {nodeCount} 个节点，{edgeCount} 条关系线。",
+      en: "Loaded {nodeCount} nodes and {edgeCount} edges.",
+    },
+    selectedTitle: {
+      "zh-CN": "节点摘要",
+      en: "Node Summary",
+    },
+    noSelection: {
+      "zh-CN": "选择一个节点后，这里会显示它的摘要与关系提示。",
+      en: "Select a node to inspect its summary and relation hints here.",
+    },
+    neighborCount: {
+      "zh-CN": "直接关联节点",
+      en: "Direct Neighbors",
+    },
+    relationSource: {
+      "zh-CN": "关系来源",
+      en: "Relation Source",
+    },
+    relationSourceNone: {
+      "zh-CN": "当前未接入独立关系模型",
+      en: "No dedicated relation model is connected yet",
+    },
+    relationSourceTimeline: {
+      "zh-CN": "基于 Timeline 结构推导",
+      en: "Derived from timeline structure",
+    },
+    focusHint: {
+      "zh-CN": "选中节点后会高亮其一跳邻居；当前关系线来自 Timeline 结构，后续可继续扩展为更稳定的节点关系模型。",
+      en: "Selecting a node highlights its direct neighbors. The current edges are derived from the timeline structure and can later evolve into a dedicated node relation model.",
+    },
+    updatedAt: {
+      "zh-CN": "最近更新",
+      en: "Updated",
+    },
+    createdAt: {
+      "zh-CN": "创建时间",
+      en: "Created",
+    },
+    sourceKind: {
+      "zh-CN": "数据来源",
+      en: "Source",
+    },
+    sourceKindNode: {
+      "zh-CN": "Node 主数据",
+      en: "Node primary data",
+    },
+  },
   form: {
     titleLabel: {
       "zh-CN": "标题",
@@ -274,6 +348,26 @@ export function getNodeMessages(locale: UiLocale) {
       updateError: pickMessage(messages.workspace.updateError, locale),
       updateSuccess: pickMessage(messages.workspace.updateSuccess, locale),
       emptyDetail: pickMessage(messages.workspace.emptyDetail, locale),
+    },
+    graph: {
+      tab: pickMessage(messages.graph.tab, locale),
+      title: pickMessage(messages.graph.title, locale),
+      description: pickMessage(messages.graph.description, locale),
+      loadError: pickMessage(messages.graph.loadError, locale),
+      empty: pickMessage(messages.graph.empty, locale),
+      emptyRelations: pickMessage(messages.graph.emptyRelations, locale),
+      stats: pickMessage(messages.graph.stats, locale),
+      selectedTitle: pickMessage(messages.graph.selectedTitle, locale),
+      noSelection: pickMessage(messages.graph.noSelection, locale),
+      neighborCount: pickMessage(messages.graph.neighborCount, locale),
+      relationSource: pickMessage(messages.graph.relationSource, locale),
+      relationSourceNone: pickMessage(messages.graph.relationSourceNone, locale),
+      relationSourceTimeline: pickMessage(messages.graph.relationSourceTimeline, locale),
+      focusHint: pickMessage(messages.graph.focusHint, locale),
+      updatedAt: pickMessage(messages.graph.updatedAt, locale),
+      createdAt: pickMessage(messages.graph.createdAt, locale),
+      sourceKind: pickMessage(messages.graph.sourceKind, locale),
+      sourceKindNode: pickMessage(messages.graph.sourceKindNode, locale),
     },
     form: {
       titleLabel: pickMessage(messages.form.titleLabel, locale),

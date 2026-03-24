@@ -17,6 +17,46 @@ export type NodeRecord = {
   updatedAt: string;
 };
 
+export type NodeGraphRelationSource = "none" | "timeline";
+
+export type NodeGraphPosition = {
+  x: number;
+  y: number;
+};
+
+export type NodeGraphNode = {
+  id: string;
+  spaceId: string;
+  title: string;
+  content: string | null;
+  nodeType: NodeType;
+  status: NodeStatus;
+  position: NodeGraphPosition;
+  metadata: {
+    sourceKind: "node";
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type NodeGraphEdge = {
+  id: string;
+  source: string;
+  target: string;
+  relationType: string;
+  metadata: Record<string, unknown> | null;
+};
+
+export type NodeGraphRecord = {
+  nodes: NodeGraphNode[];
+  edges: NodeGraphEdge[];
+  meta: {
+    relationSource: NodeGraphRelationSource;
+    relationCount: number;
+    supportsNeighborFocus: boolean;
+  };
+};
+
 export type CreateNodeInput = {
   title: string;
   content?: string;
