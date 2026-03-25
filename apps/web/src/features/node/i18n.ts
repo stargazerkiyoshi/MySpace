@@ -102,6 +102,26 @@ const messages = {
       "zh-CN": "请选择一个节点，或先创建一个新的节点。",
       en: "Select a node, or create a new one first.",
     },
+    progressTitle: {
+      "zh-CN": "当前进展节点",
+      en: "Current Progress Node",
+    },
+    progressDescription: {
+      "zh-CN": "这是当前空间首屏默认聚焦的节点。你可以继续推进它，或切换到其他节点。",
+      en: "This is the node the space home focuses on first. Continue from here or switch to another node.",
+    },
+    progressEmpty: {
+      "zh-CN": "当前空间还没有节点。先创建一个进展节点。",
+      en: "There are no nodes in this space yet. Create the first progress node.",
+    },
+    openDetail: {
+      "zh-CN": "查看节点详情",
+      en: "View Node Details",
+    },
+    listHint: {
+      "zh-CN": "其他节点默认收在下方列表中，按需切换。",
+      en: "Other nodes stay in the list below until you choose to switch.",
+    },
   },
   graph: {
     tab: {
@@ -264,6 +284,10 @@ const messages = {
       "zh-CN": "暂无内容。",
       en: "No content yet.",
     },
+    focus: {
+      "zh-CN": "聚焦",
+      en: "Focus",
+    },
   },
   detail: {
     metaTitle: {
@@ -348,6 +372,11 @@ export function getNodeMessages(locale: UiLocale) {
       updateError: pickMessage(messages.workspace.updateError, locale),
       updateSuccess: pickMessage(messages.workspace.updateSuccess, locale),
       emptyDetail: pickMessage(messages.workspace.emptyDetail, locale),
+      progressTitle: pickMessage(messages.workspace.progressTitle, locale),
+      progressDescription: pickMessage(messages.workspace.progressDescription, locale),
+      progressEmpty: pickMessage(messages.workspace.progressEmpty, locale),
+      openDetail: pickMessage(messages.workspace.openDetail, locale),
+      listHint: pickMessage(messages.workspace.listHint, locale),
     },
     graph: {
       tab: pickMessage(messages.graph.tab, locale),
@@ -393,6 +422,7 @@ export function getNodeMessages(locale: UiLocale) {
       typeLabel: pickMessage(messages.list.typeLabel, locale),
       statusLabel: pickMessage(messages.list.statusLabel, locale),
       noContent: pickMessage(messages.list.noContent, locale),
+      focus: pickMessage(messages.list.focus, locale),
     },
     detail: {
       metaTitle: pickMessage(messages.detail.metaTitle, locale),

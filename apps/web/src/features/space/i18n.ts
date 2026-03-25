@@ -139,6 +139,46 @@ const messages = {
       "zh-CN": "更多子能力将在新的 OpenSpec 变更中补齐。",
       en: "Additional capabilities will be added in new OpenSpec changes.",
     },
+    viewDetails: {
+      "zh-CN": "空间详情",
+      en: "Space Details",
+    },
+    editSpace: {
+      "zh-CN": "编辑空间",
+      en: "Edit Space",
+    },
+    saveChanges: {
+      "zh-CN": "保存修改",
+      en: "Save Changes",
+    },
+    updateError: {
+      "zh-CN": "空间更新失败",
+      en: "Failed to update space",
+    },
+    updateSuccess: {
+      "zh-CN": "空间更新成功",
+      en: "Space updated",
+    },
+    progressTitle: {
+      "zh-CN": "当前进展",
+      en: "Current Progress",
+    },
+    progressDescription: {
+      "zh-CN": "先聚焦当前正在推进的节点，其他信息按需展开。",
+      en: "Start from the node that is currently moving this space forward, then expand other information only when needed.",
+    },
+    graphEntry: {
+      "zh-CN": "结构视图",
+      en: "Graph View",
+    },
+    nodeEntry: {
+      "zh-CN": "节点列表",
+      en: "Node List",
+    },
+    historyEntry: {
+      "zh-CN": "最近变化",
+      en: "Recent History",
+    },
   },
 } as const;
 
@@ -194,6 +234,16 @@ export function getSpaceMessages(locale: UiLocale) {
         locale,
       ),
       placeholderEmpty: pickMessage(messages.detail.placeholderEmpty, locale),
+      viewDetails: pickMessage(messages.detail.viewDetails, locale),
+      editSpace: pickMessage(messages.detail.editSpace, locale),
+      saveChanges: pickMessage(messages.detail.saveChanges, locale),
+      updateError: pickMessage(messages.detail.updateError, locale),
+      updateSuccess: pickMessage(messages.detail.updateSuccess, locale),
+      progressTitle: pickMessage(messages.detail.progressTitle, locale),
+      progressDescription: pickMessage(messages.detail.progressDescription, locale),
+      graphEntry: pickMessage(messages.detail.graphEntry, locale),
+      nodeEntry: pickMessage(messages.detail.nodeEntry, locale),
+      historyEntry: pickMessage(messages.detail.historyEntry, locale),
     },
   };
 }

@@ -41,7 +41,7 @@ export function NodeList({
               size="small"
               onClick={() => onSelect(item.id)}
             >
-              {messages.open}
+              {selectedNodeId === item.id ? messages.open : messages.focus}
             </Button>
           }
         >

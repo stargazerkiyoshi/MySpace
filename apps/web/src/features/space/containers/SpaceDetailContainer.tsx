@@ -1,9 +1,10 @@
-import { Alert, Card, Skeleton, Tabs } from "antd";
+import { useState } from "react";
+import { Alert, Button, Card, Drawer, Skeleton, Space } from "antd";
 import { NodeGraphWorkspace } from "@/features/node/containers/NodeGraphWorkspace";
 import { NodeWorkspace } from "@/features/node/containers/NodeWorkspace";
 import { SpaceTimelinePanel } from "@/features/timeline/containers/SpaceTimelinePanel";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
-import { getNodeMessages } from "@/features/node/i18n";
+import { getSpaceMessages } from "../i18n";
 import { SpaceDetailPanel } from "../components/SpaceDetailPanel";
 import { useSpaceDetailQuery, useUpdateSpaceMutation } from "../hooks";
 import type { UpdateSpaceInput } from "../types";
@@ -20,19 +21,9 @@ export function SpaceDetailContainer({
   const query = useSpaceDetailQuery(spaceId);
   const updateMutation = useUpdateSpaceMutation(spaceId);
   const { locale } = useUiLocaleStore();
-  const nodeMessages = getNodeMessages(locale);
-  const tabMessages =
-    locale === "zh-CN"
-      ? {
-          nodeTab: "节点",
-          graphTab: nodeMessages.graph.tab,
-          historyTab: "最近变化",
-        }
-      : {
-          nodeTab: "Nodes",
-          graphTab: nodeMessages.graph.tab,
-          historyTab: "Recent History",
-        };
+  const spaceMessages = getSpaceMessages(locale).detail;
+  const [isNodeListOpen, setIsNodeListOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(Boolean(initialTimelineEventId));
 
   function handleUpdate(values: UpdateSpaceInput) {
     updateMutation.mutate(values);
@@ -69,6 +60,12 @@ export function SpaceDetailContainer({
         isUpdating={updateMutation.isPending}
         updateError={updateMutation.isError ? updateMutation.error.message : undefined}
         updateSuccess={updateMutation.isSuccess}
+        extraActions={
+          <Space wrap>
+            <Button onClick={() => setIsNodeListOpen(true)}>{spaceMessages.nodeEntry}</Button>
+            <Button onClick={() => setIsHistoryOpen(true)}>{spaceMessages.historyEntry}</Button>
+          </Space>
+        }
       />
       <Card
         style={{
@@ -77,35 +74,29 @@ export function SpaceDetailContainer({
           borderColor: "#e2e8f0",
           boxShadow: "0 8px 24px rgba(15, 23, 42, 0.04)",
         }}
-        bodyStyle={{ paddingTop: 12 }}
+        bodyStyle={{ paddingTop: 20 }}
       >
-        <Tabs
-          defaultActiveKey={initialTimelineEventId ? "history" : "nodes"}
-          destroyOnHidden
-          items={[
-            {
-              key: "nodes",
-              label: tabMessages.nodeTab,
-              children: <NodeWorkspace spaceId={query.data.id} />,
-            },
-            {
-              key: "graph",
-              label: tabMessages.graphTab,
-              children: <NodeGraphWorkspace spaceId={query.data.id} />,
-            },
-            {
-              key: "history",
-              label: tabMessages.historyTab,
-              children: (
-                <SpaceTimelinePanel
-                  spaceId={query.data.id}
-                  initialSelectedEventId={initialTimelineEventId}
-                />
-              ),
-            },
-          ]}
-        />
+        <NodeGraphWorkspace spaceId={query.data.id} />
       </Card>
+      <Drawer
+        title={spaceMessages.nodeEntry}
+        width={720}
+        open={isNodeListOpen}
+        onClose={() => setIsNodeListOpen(false)}
+      >
+        <NodeWorkspace spaceId={query.data.id} />
+      </Drawer>
+      <Drawer
+        title={spaceMessages.historyEntry}
+        width={720}
+        open={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+      >
+        <SpaceTimelinePanel
+          spaceId={query.data.id}
+          initialSelectedEventId={initialTimelineEventId}
+        />
+      </Drawer>
     </>
   );
 }

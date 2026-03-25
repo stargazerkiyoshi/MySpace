@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, type ReactNode, useState } from "react";
 import { Alert, Button, Card, Descriptions, Empty, Modal, Space, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
@@ -13,6 +13,7 @@ type SpaceDetailPanelProps = {
   isUpdating: boolean;
   updateError?: string;
   updateSuccess: boolean;
+  extraActions?: ReactNode;
 };
 
 export function SpaceDetailPanel({
@@ -21,16 +22,13 @@ export function SpaceDetailPanel({
   isUpdating,
   updateError,
   updateSuccess,
+  extraActions,
 }: SpaceDetailPanelProps) {
   const navigate = useNavigate();
   const { locale } = useUiLocaleStore();
   const messages = getSpaceMessages(locale).detail;
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const editLabel = locale === "zh-CN" ? "编辑空间" : "Edit Space";
-  const saveLabel = locale === "zh-CN" ? "保存修改" : "Save Changes";
-  const updateErrorLabel = locale === "zh-CN" ? "空间更新失败" : "Failed to update space";
-  const updateSuccessLabel = locale === "zh-CN" ? "空间更新成功" : "Space updated";
 
   useEffect(() => {
     if (updateSuccess) {
@@ -39,9 +37,12 @@ export function SpaceDetailPanel({
   }, [updateSuccess]);
 
   return (
-    <Space direction="vertical" size="large" style={{ width: "100%" }}>
-      <Card style={{ borderRadius: 16 }}>
-        <Space direction="vertical" size="large" style={{ width: "100%" }}>
+    <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+      <Card
+        bodyStyle={{ padding: 18 }}
+        style={{ borderRadius: 16, borderColor: "#dbeafe", background: "#f8fbff" }}
+      >
+        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
           <Space
             align="start"
             style={{ width: "100%", justifyContent: "space-between" }}
@@ -51,7 +52,10 @@ export function SpaceDetailPanel({
               <Typography.Title level={3} style={{ margin: 0 }}>
                 {space.name}
               </Typography.Title>
-              <Typography.Paragraph style={{ marginBottom: 0, color: "#64748b" }}>
+              <Typography.Paragraph
+                ellipsis={{ rows: 1, tooltip: space.description || messages.noDescription }}
+                style={{ marginBottom: 0, color: "#64748b" }}
+              >
                 {space.description || messages.noDescription}
               </Typography.Paragraph>
             </Space>
@@ -59,35 +63,30 @@ export function SpaceDetailPanel({
             <Space wrap>
               <Button onClick={() => navigate("/spaces")}>{messages.back}</Button>
               <Button type="default" onClick={() => setIsDetailOpen(true)}>
-                {locale === "zh-CN" ? "查看详情" : "View Details"}
+                {messages.viewDetails}
               </Button>
               <Button type="primary" onClick={() => setIsEditOpen(true)}>
-                {editLabel}
+                {messages.editSpace}
               </Button>
             </Space>
           </Space>
 
-          <Space wrap size={[12, 12]}>
-            <Card size="small" style={{ minWidth: 180, borderRadius: 12 }}>
-              <Typography.Text type="secondary">{messages.createdAt}</Typography.Text>
-              <Typography.Paragraph style={{ margin: "8px 0 0" }}>
-                {formatSpaceDate(space.createdAt)}
-              </Typography.Paragraph>
-            </Card>
-            <Card size="small" style={{ minWidth: 180, borderRadius: 12 }}>
-              <Typography.Text type="secondary">{messages.updatedAt}</Typography.Text>
-              <Typography.Paragraph style={{ margin: "8px 0 0" }}>
-                {formatSpaceDate(space.updatedAt)}
-              </Typography.Paragraph>
-            </Card>
-            <Card size="small" style={{ minWidth: 220, borderRadius: 12 }}>
-              <Typography.Text type="secondary">{messages.placeholderTitle}</Typography.Text>
-              <Typography.Paragraph style={{ margin: "8px 0 0", color: "#64748b" }}>
-                {locale === "zh-CN"
-                  ? "当前空间已承载节点与时间线能力，更多能力将继续扩展。"
-                  : "This space already carries nodes and history, with more capabilities coming next."}
-              </Typography.Paragraph>
-            </Card>
+          <Space wrap size={[12, 12]} style={{ justifyContent: "space-between" }}>
+            <Space wrap size={[12, 12]}>
+              <Card size="small" bodyStyle={{ padding: "10px 14px" }} style={{ minWidth: 168, borderRadius: 12 }}>
+                <Typography.Text type="secondary">{messages.createdAt}</Typography.Text>
+                <Typography.Paragraph style={{ margin: "8px 0 0" }}>
+                  {formatSpaceDate(space.createdAt)}
+                </Typography.Paragraph>
+              </Card>
+              <Card size="small" bodyStyle={{ padding: "10px 14px" }} style={{ minWidth: 168, borderRadius: 12 }}>
+                <Typography.Text type="secondary">{messages.updatedAt}</Typography.Text>
+                <Typography.Paragraph style={{ margin: "8px 0 0" }}>
+                  {formatSpaceDate(space.updatedAt)}
+                </Typography.Paragraph>
+              </Card>
+            </Space>
+            {extraActions}
           </Space>
         </Space>
       </Card>
@@ -131,7 +130,7 @@ export function SpaceDetailPanel({
       </Modal>
 
       <Modal
-        title={editLabel}
+        title={messages.editSpace}
         open={isEditOpen}
         footer={null}
         onCancel={() => setIsEditOpen(false)}
@@ -139,10 +138,10 @@ export function SpaceDetailPanel({
       >
         <Space direction="vertical" size="middle" style={{ width: "100%" }}>
           {updateError ? (
-            <Alert type="error" showIcon message={updateErrorLabel} description={updateError} />
+            <Alert type="error" showIcon message={messages.updateError} description={updateError} />
           ) : null}
           {updateSuccess ? (
-            <Alert type="success" showIcon message={updateSuccessLabel} />
+            <Alert type="success" showIcon message={messages.updateSuccess} />
           ) : null}
           <SpaceCreateForm
             isSubmitting={isUpdating}
@@ -150,7 +149,7 @@ export function SpaceDetailPanel({
               name: space.name,
               description: space.description ?? "",
             }}
-            submitLabel={saveLabel}
+            submitLabel={messages.saveChanges}
             onSubmit={onUpdate}
           />
         </Space>
