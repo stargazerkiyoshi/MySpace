@@ -1,81 +1,83 @@
 # OpenSpec 全局状态桥（digest）
+
 > 用途：为协作者提供当前仓库的覆盖式状态快照。
 > 规则：本文件是快照，不是日志；每次更新直接覆盖旧内容。
 
 ## 1. 快照元信息
-- `snapshot_at`: `2026-03-24`
+
+- `snapshot_at`: `2026-03-25`
 - `owner`: `Codex`
-- `scope`: `全仓库（首页状态页与时间线历史节点联动变更已归档，等待 Git 提交）`
+- `scope`: `全仓库；add-space-node-graph-view 已归档，当前处于归档后待提交的共享基线快照`
 - `status`: `green`
 
 ## 2. 当前目标（Top Goal）
-- `primary_goal`: `提交 link-home-state-to-timeline-history 的归档结果并回到稳定基线`
-- `success_signal`: `无活动 change、主规范同步完成、工作区 clean`
-- `deadline_or_window`: `归档收尾阶段`
+
+- `primary_goal`: `在完成 add-space-node-graph-view 归档和规范同步后，提交归档改动并回到稳定基线，为下一条 UI 主线变更留出清晰起点`
+- `success_signal`: `无活动 change，主 specs 已同步，归档相关改动已提交`
+- `deadline_or_window`: `归档 / 交接收尾`
 
 ## 3. 当前阶段与主线
-- `current_phase`: `archive`
+
+- `current_phase`: `archive-wrap-up`
 - `change_type`: `spec-impacting`
 - `active_change_ids`: `[]`
 - `active_specs`: `[]`
-- `branch_context`: `main，系统已从“首页与历史并存”推进到“首页能够解释当前状态来源并回跳关键历史节点”的状态`
+- `branch_context`: `main；add-space-node-graph-view 已归档，openspec-cn list 当前无活动 change`
 - `git_branch`: `main`
-- `git_head`: `725eb7a`
+- `git_head`: `9ae1e3f`
 - `git_dirty`: `true`
 - `git_changed_files`:
-  - `openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history/...`
-  - `openspec/specs/current-state-linking/spec.md`
-  - `openspec/specs/timeline-management/spec.md`
+  - `openspec/changes/add-space-node-graph-view/* (deleted)`
+  - `openspec/changes/archive/2026-03-25-add-space-node-graph-view/`
   - `openspec/specs/space-management/spec.md`
   - `openspec/specs/web-app-shell/spec.md`
+  - `openspec/specs/space-node-visualization/spec.md`
   - `openspec/digest.local.md`
   - `openspec/digest.md`
-  - `apps/core-api/...`
-  - `apps/web/...`
-  - `README.md`
 
-## 4. 当前决策（Current Decisions）
-- `decisions`:
-  - `首页状态与时间线历史节点通过稳定的 current-state linking 语义挂接，而不是依赖前端临时推断`
-  - `首页跳转历史节点继续复用 Space 页和 query 参数，不新增独立历史详情路由`
-  - `时间线详情返回结构继续承载当前状态关系字段，供首页和历史页共用`
+## 4. 当前事实状态（Source-of-Truth Snapshot）
 
-## 5. 当前事实状态（Source-of-Truth Snapshot）
-- `spec_status`: `current-state-linking、timeline-management、space-management、web-app-shell 主规范已同步`
-- `changes_status`: `link-home-state-to-timeline-history 已归档到 openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history；当前无其他活动 change`
-- `code_status`: `core-api 已支持 dashboard 当前状态聚合与 timeline 当前状态关系字段；web 已支持首页状态摘要、历史跳转和时间线详情关系展示`
-- `tests_status`: `已完成 core-api typecheck/build 和 web typecheck/build`
+- `spec_status`: `space-management 与 web-app-shell 已同步 graph view 相关要求，并新增 space-node-visualization 主规范`
+- `changes_status`: `openspec/changes/ 下已无活动 change；最新归档为 2026-03-25-add-space-node-graph-view`
+- `code_status`: `最近实现提交 9ae1e3f 已落地 node graph view；当前工作区主要是 OpenSpec 归档与 digest 更新`
+- `tests_status`: `本次收尾未额外运行测试；归档依据为 tasks 完成、活动 change 状态 complete，以及现有实现已落地`
 
-## 6. 阻塞与风险（Blockers / Risks）
+## 5. 阻塞与风险（Blockers / Risks）
+
 - `blockers`:
   - `无硬阻塞`
 - `risks`:
-  - `本次归档结果与实现代码尚未提交到 Git`
+  - `归档相关改动尚未提交 Git，当前共享基线仍属于待落盘状态`
+  - `若后续直接进入新 UI 调整而不先提交，可能混合两条主线的工作区改动`
 
-## 7. 待确认事项（Open Questions）
+## 6. 待确认事项（Open Questions）
+
 - `open_questions`:
-  - `下一条业务主线是 Snapshot、Sync Candidate，还是继续强化 Timeline / Current State 演化能力，仍待新变更确认`
+  - `是否先提交本次归档，再发起“Space 首屏聚焦进展节点”的新 change`
+  - `下一条 UI 变更是否需要同步收敛 Space 首页与 Space 详情页的信息默认显隐策略`
 
-## 8. 已完成事项（Done）
+## 7. 已完成事项（Done）
+
 - `done`:
-  - `已完成首页状态来源摘要与时间线历史节点的最小联动闭环`
-  - `已完成时间线详情对当前状态关系的结构化表达`
-  - `已完成 current-state-linking 新 capability 的主规范落地`
-  - `已完成 link-home-state-to-timeline-history 归档迁移`
+  - `已确认 add-space-node-graph-view 的所有 OpenSpec 产出物完成`
+  - `已归档 add-space-node-graph-view 至 archive/2026-03-25-add-space-node-graph-view`
+  - `已同步主 specs 并新增 space-node-visualization`
+  - `归档相关改动尚未完成 Git 提交`
 
-## 9. 下一步动作（Next Actions）
+## 8. 下一步动作（Next Actions）
+
 - `next_actions`:
-  - `[P1] 提交本次实现、规范同步和归档结果`
-  - `[P2] 提交后确认工作区恢复 clean`
-  - `[P3] 在新的稳定基线上发起下一项 OpenSpec 变更`
+  - `[P1] 提交本次归档相关 Git 改动`
+  - `[P2] 提交后回到 clean baseline`
+  - `[P3] 针对新的 UI 主表达方向发起下一条 OpenSpec change`
 
-## 10. 关键路径引用（References）
+## 9. 关键路径引用（References）
+
 - `references`:
   - `openspec/project.md`
-  - `openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history/proposal.md`
-  - `openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history/design.md`
-  - `openspec/changes/archive/2026-03-24-link-home-state-to-timeline-history/tasks.md`
-  - `openspec/specs/current-state-linking/spec.md`
-  - `openspec/specs/timeline-management/spec.md`
+  - `openspec/changes/archive/2026-03-25-add-space-node-graph-view/proposal.md`
+  - `openspec/changes/archive/2026-03-25-add-space-node-graph-view/design.md`
+  - `openspec/changes/archive/2026-03-25-add-space-node-graph-view/tasks.md`
   - `openspec/specs/space-management/spec.md`
   - `openspec/specs/web-app-shell/spec.md`
+  - `openspec/specs/space-node-visualization/spec.md`
