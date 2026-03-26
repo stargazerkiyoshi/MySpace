@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Alert, Button, Card, Drawer, Skeleton, Space } from "antd";
+import { NodeCreateForm } from "@/features/node/components/NodeCreateForm";
 import { NodeGraphWorkspace } from "@/features/node/containers/NodeGraphWorkspace";
 import { NodeWorkspace } from "@/features/node/containers/NodeWorkspace";
+import { useCreateNodeMutation } from "@/features/node/hooks";
 import { SpaceTimelinePanel } from "@/features/timeline/containers/SpaceTimelinePanel";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { getSpaceMessages } from "../i18n";
 import { SpaceDetailPanel } from "../components/SpaceDetailPanel";
 import { useSpaceDetailQuery, useUpdateSpaceMutation } from "../hooks";
+import type { CreateNodeInput } from "@/features/node/types";
 import type { UpdateSpaceInput } from "../types";
 
 type SpaceDetailContainerProps = {
@@ -20,13 +23,23 @@ export function SpaceDetailContainer({
 }: SpaceDetailContainerProps) {
   const query = useSpaceDetailQuery(spaceId);
   const updateMutation = useUpdateSpaceMutation(spaceId);
+  const createNodeMutation = useCreateNodeMutation(spaceId);
   const { locale } = useUiLocaleStore();
   const spaceMessages = getSpaceMessages(locale).detail;
+  const [isCreateNodeOpen, setIsCreateNodeOpen] = useState(false);
   const [isNodeListOpen, setIsNodeListOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(Boolean(initialTimelineEventId));
 
   function handleUpdate(values: UpdateSpaceInput) {
     updateMutation.mutate(values);
+  }
+
+  function handleCreateNode(values: CreateNodeInput) {
+    createNodeMutation.mutate(values, {
+      onSuccess: () => {
+        setIsCreateNodeOpen(false);
+      },
+    });
   }
 
   if (query.isLoading) {
@@ -60,24 +73,34 @@ export function SpaceDetailContainer({
         isUpdating={updateMutation.isPending}
         updateError={updateMutation.isError ? updateMutation.error.message : undefined}
         updateSuccess={updateMutation.isSuccess}
-        extraActions={
-          <Space wrap>
-            <Button onClick={() => setIsNodeListOpen(true)}>{spaceMessages.nodeEntry}</Button>
-            <Button onClick={() => setIsHistoryOpen(true)}>{spaceMessages.historyEntry}</Button>
-          </Space>
-        }
       />
-      <Card
-        style={{
-          marginTop: 8,
-          borderRadius: 16,
-          borderColor: "#e2e8f0",
-          boxShadow: "0 8px 24px rgba(15, 23, 42, 0.04)",
-        }}
-        bodyStyle={{ paddingTop: 20 }}
+      <div style={{ marginTop: 8 }}>
+        <NodeGraphWorkspace
+          spaceId={query.data.id}
+          compact
+          overlayActions={
+            <Space wrap size={[8, 8]}>
+              <Button type="primary" onClick={() => setIsCreateNodeOpen(true)}>
+                {locale === "zh-CN" ? "创建节点" : "Create Node"}
+              </Button>
+              <Button onClick={() => setIsNodeListOpen(true)}>{spaceMessages.nodeEntry}</Button>
+              <Button onClick={() => setIsHistoryOpen(true)}>{spaceMessages.historyEntry}</Button>
+            </Space>
+          }
+        />
+      </div>
+      <Drawer
+        title={locale === "zh-CN" ? "创建节点" : "Create Node"}
+        width={560}
+        open={isCreateNodeOpen}
+        onClose={() => setIsCreateNodeOpen(false)}
+        destroyOnClose
       >
-        <NodeGraphWorkspace spaceId={query.data.id} />
-      </Card>
+        <NodeCreateForm
+          isSubmitting={createNodeMutation.isPending}
+          onSubmit={handleCreateNode}
+        />
+      </Drawer>
       <Drawer
         title={spaceMessages.nodeEntry}
         width={720}

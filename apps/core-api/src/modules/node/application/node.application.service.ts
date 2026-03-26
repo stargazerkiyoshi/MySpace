@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { CreateNodeDto, type NodeStatusValue, type NodeTypeValue } from "../dto/create-node.dto";
+import { CreateNodeRelationDto } from "../dto/create-node-relation.dto";
 import { NodeGraphDto } from "../dto/node-graph-response.dto";
+import { NodeRelationDto } from "../dto/node-relation-response.dto";
 import { NodeDetailDto, NodeSummaryDto } from "../dto/node-response.dto";
 import { UpdateNodeDto } from "../dto/update-node.dto";
 import { NodeRepository } from "../infrastructure/node.repository";
@@ -46,21 +48,37 @@ export class NodeApplicationService {
   }
 
   async getNodeGraph(spaceId: string): Promise<NodeGraphDto> {
-    const [nodes, timeline] = await Promise.all([
+    const [nodes, relations] = await Promise.all([
       this.nodeRepository.listNodes(spaceId),
-      this.timelineApplicationService.listSpaceTimeline(spaceId),
+      this.nodeRepository.listNodeRelations(spaceId),
     ]);
-    const graphEdges = mapTimelineEdges(timeline);
 
     return {
       nodes: nodes.map((node, index) => mapNodeToGraph(node, index)),
-      edges: graphEdges,
+      edges: relations.map(mapRelationToGraphEdge),
       meta: {
-        relationSource: graphEdges.length ? "timeline" : "none",
-        relationCount: graphEdges.length,
-        supportsNeighborFocus: graphEdges.length > 0,
+        relationSource: relations.length ? "node_relation" : "none",
+        relationCount: relations.length,
+        supportsNeighborFocus: relations.length > 0,
       },
     };
+  }
+
+  async createNodeRelation(
+    spaceId: string,
+    input: CreateNodeRelationDto,
+  ): Promise<NodeRelationDto> {
+    const relation = await this.nodeRepository.createNodeRelation(
+      spaceId,
+      input.sourceNodeId,
+      input.targetNodeId,
+    );
+
+    return mapNodeRelation(relation);
+  }
+
+  async deleteNodeRelation(spaceId: string, relationId: string): Promise<void> {
+    await this.nodeRepository.deleteNodeRelation(spaceId, relationId);
   }
 
   async getNodeDetail(nodeId: string): Promise<NodeDetailDto> {
@@ -123,6 +141,7 @@ function mapNode(node: {
   content: string | null;
   nodeType: string;
   status: string;
+  orderIndex: number;
   createdAt: Date;
   updatedAt: Date;
 }): NodeDetailDto {
@@ -133,6 +152,7 @@ function mapNode(node: {
     content: node.content,
     nodeType: node.nodeType.toLowerCase() as NodeTypeValue,
     status: node.status.toLowerCase() as NodeStatusValue,
+    orderIndex: node.orderIndex,
     createdAt: node.createdAt.toISOString(),
     updatedAt: node.updatedAt.toISOString(),
   };
@@ -143,11 +163,12 @@ function mapNodeToGraph(
     id: string;
     spaceId: string;
     title: string;
-    content: string | null;
-    nodeType: string;
-    status: string;
-    createdAt: Date;
-    updatedAt: Date;
+  content: string | null;
+  nodeType: string;
+  status: string;
+  orderIndex: number;
+  createdAt: Date;
+  updatedAt: Date;
   },
   index: number,
 ) {
@@ -162,6 +183,7 @@ function mapNodeToGraph(
     content: node.content,
     nodeType: node.nodeType.toLowerCase() as NodeTypeValue,
     status: node.status.toLowerCase() as NodeStatusValue,
+    orderIndex: node.orderIndex,
     position: {
       x: columnIndex * 260,
       y: rowIndex * 170,
@@ -174,87 +196,38 @@ function mapNodeToGraph(
   };
 }
 
-function mapTimelineEdges(
-  timeline: Array<{
-    id: string;
-    targetId: string;
-    parentNodeId: string | null;
-    branchFromNodeId: string | null;
-    mergeToNodeId: string | null;
-  }>,
-) {
-  const eventMap = new Map(timeline.map((item) => [item.id, item]));
-  const edges = new Map<
-    string,
-    {
-      id: string;
-      source: string;
-      target: string;
-      relationType: string;
-      metadata: Record<string, unknown>;
-    }
-  >();
-
-  for (const item of timeline) {
-    collectTimelineEdge(edges, eventMap, item, item.parentNodeId, "timeline_parent");
-    collectTimelineEdge(edges, eventMap, item, item.branchFromNodeId, "timeline_branch");
-    collectTimelineEdge(edges, eventMap, item, item.mergeToNodeId, "timeline_merge");
-  }
-
-  return Array.from(edges.values());
+function mapNodeRelation(nodeRelation: {
+  id: string;
+  spaceId: string;
+  sourceNodeId: string;
+  targetNodeId: string;
+  relationType: string;
+  createdAt: Date;
+}): NodeRelationDto {
+  return {
+    id: nodeRelation.id,
+    spaceId: nodeRelation.spaceId,
+    sourceNodeId: nodeRelation.sourceNodeId,
+    targetNodeId: nodeRelation.targetNodeId,
+    relationType: nodeRelation.relationType,
+    createdAt: nodeRelation.createdAt.toISOString(),
+  };
 }
 
-function collectTimelineEdge(
-  edges: Map<
-    string,
-    {
-      id: string;
-      source: string;
-      target: string;
-      relationType: string;
-      metadata: Record<string, unknown>;
-    }
-  >,
-  eventMap: Map<
-    string,
-    {
-      id: string;
-      targetId: string;
-    }
-  >,
-  item: {
-    id: string;
-    targetId: string;
-  },
-  relatedEventId: string | null,
-  relationType: "timeline_parent" | "timeline_branch" | "timeline_merge",
-) {
-  if (!relatedEventId) {
-    return;
-  }
-
-  const relatedEvent = eventMap.get(relatedEventId);
-  if (!relatedEvent) {
-    return;
-  }
-
-  if (relatedEvent.targetId === item.targetId) {
-    return;
-  }
-
-  const edgeId = `${relationType}:${relatedEvent.targetId}:${item.targetId}`;
-  if (edges.has(edgeId)) {
-    return;
-  }
-
-  edges.set(edgeId, {
-    id: edgeId,
-    source: relatedEvent.targetId,
-    target: item.targetId,
-    relationType,
+function mapRelationToGraphEdge(nodeRelation: {
+  id: string;
+  sourceNodeId: string;
+  targetNodeId: string;
+  relationType: string;
+  createdAt: Date;
+}) {
+  return {
+    id: nodeRelation.id,
+    source: nodeRelation.sourceNodeId,
+    target: nodeRelation.targetNodeId,
+    relationType: nodeRelation.relationType,
     metadata: {
-      sourceEventId: relatedEvent.id,
-      targetEventId: item.id,
+      createdAt: nodeRelation.createdAt.toISOString(),
     },
-  });
+  };
 }

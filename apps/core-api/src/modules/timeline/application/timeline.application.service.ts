@@ -65,12 +65,10 @@ export class TimelineApplicationService {
       input.spaceId,
       executor,
     );
-    const latestMainline = input.isMainline === false
-      ? await this.timelineRepository.getLatestMainlineSpaceEvent(
-          input.spaceId,
-          executor,
-        )
-      : null;
+    const latestMainline = await this.timelineRepository.getLatestMainlineSpaceEvent(
+      input.spaceId,
+      executor,
+    );
     const nodeType = resolveTimelineNodeType("node_created", input);
 
     return this.timelineRepository.createEvent(
@@ -91,7 +89,10 @@ export class TimelineApplicationService {
           input.impactSummary ??
           `This node extends the current working path for the space.`,
         isMainline: input.isMainline ?? true,
-        parentNodeId: latest?.id ?? null,
+        parentNodeId:
+          input.isMainline === false
+            ? latest?.id ?? null
+            : latestMainline?.id ?? latest?.id ?? null,
         branchFromNodeId:
           input.branchFromNodeId ??
           (input.isMainline === false ? latestMainline?.id ?? latest?.id ?? null : null),
@@ -114,12 +115,10 @@ export class TimelineApplicationService {
       input.spaceId,
       executor,
     );
-    const latestMainline = input.isMainline === false
-      ? await this.timelineRepository.getLatestMainlineSpaceEvent(
-          input.spaceId,
-          executor,
-        )
-      : null;
+    const latestMainline = await this.timelineRepository.getLatestMainlineSpaceEvent(
+      input.spaceId,
+      executor,
+    );
     const nodeType = resolveTimelineNodeType("node_updated", input);
 
     return this.timelineRepository.createEvent(
@@ -140,7 +139,10 @@ export class TimelineApplicationService {
           input.impactSummary ??
           `This update influences how the current space continues to move forward.`,
         isMainline: input.isMainline ?? true,
-        parentNodeId: latest?.id ?? null,
+        parentNodeId:
+          input.isMainline === false
+            ? latest?.id ?? null
+            : latestMainline?.id ?? latest?.id ?? null,
         branchFromNodeId:
           input.branchFromNodeId ??
           (input.isMainline === false ? latestMainline?.id ?? latest?.id ?? null : null),
@@ -163,12 +165,10 @@ export class TimelineApplicationService {
       input.spaceId,
       executor,
     );
-    const latestMainline = input.isMainline === false
-      ? await this.timelineRepository.getLatestMainlineSpaceEvent(
-          input.spaceId,
-          executor,
-        )
-      : null;
+    const latestMainline = await this.timelineRepository.getLatestMainlineSpaceEvent(
+      input.spaceId,
+      executor,
+    );
     const nodeType = resolveTimelineNodeType("node_status_changed", input);
 
     return this.timelineRepository.createEvent(
@@ -189,7 +189,10 @@ export class TimelineApplicationService {
           input.impactSummary ??
           getStatusImpactSummary(input.status, input.previousStatus),
         isMainline: input.isMainline ?? true,
-        parentNodeId: latest?.id ?? null,
+        parentNodeId:
+          input.isMainline === false
+            ? latest?.id ?? null
+            : latestMainline?.id ?? latest?.id ?? null,
         branchFromNodeId:
           input.branchFromNodeId ??
           (input.isMainline === false ? latestMainline?.id ?? latest?.id ?? null : null),

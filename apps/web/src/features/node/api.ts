@@ -1,7 +1,9 @@
 import { http } from "@/shared/lib/http";
 import type {
+  CreateNodeRelationInput,
   CreateNodeInput,
   NodeGraphRecord,
+  NodeRelationRecord,
   NodeRecord,
   UpdateNodeInput,
 } from "./types";
@@ -29,4 +31,19 @@ export async function createNode(spaceId: string, input: CreateNodeInput) {
 export async function updateNode(nodeId: string, input: UpdateNodeInput) {
   const { data } = await http.patch<NodeRecord>(`/nodes/${nodeId}`, input);
   return data;
+}
+
+export async function createNodeRelation(
+  spaceId: string,
+  input: CreateNodeRelationInput,
+) {
+  const { data } = await http.post<NodeRelationRecord>(
+    `/spaces/${spaceId}/node-relations`,
+    input,
+  );
+  return data;
+}
+
+export async function deleteNodeRelation(spaceId: string, relationId: string) {
+  await http.delete(`/spaces/${spaceId}/node-relations/${relationId}`);
 }

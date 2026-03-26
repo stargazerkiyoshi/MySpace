@@ -1,6 +1,6 @@
 import type { NodeStatusValue, NodeTypeValue } from "./create-node.dto";
 
-export const nodeGraphRelationSourceValues = ["none", "timeline"] as const;
+export const nodeGraphRelationSourceValues = ["none", "node_relation"] as const;
 
 export type NodeGraphRelationSourceValue =
   (typeof nodeGraphRelationSourceValues)[number];
@@ -21,6 +21,7 @@ export class NodeGraphNodeDto {
   content!: string | null;
   nodeType!: NodeTypeValue;
   status!: NodeStatusValue;
+  orderIndex!: number;
   position!: NodeGraphPositionDto;
   metadata!: NodeGraphNodeMetadataDto;
   createdAt!: string;

@@ -1,13 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  createNodeRelation,
   createNode,
+  deleteNodeRelation,
   fetchNodeDetail,
   fetchSpaceNodeGraph,
   fetchSpaceNodes,
   updateNode,
 } from "./api";
 import { timelineKeys } from "@/features/timeline/hooks";
-import type { CreateNodeInput, UpdateNodeInput } from "./types";
+import type {
+  CreateNodeInput,
+  CreateNodeRelationInput,
+  UpdateNodeInput,
+} from "./types";
 
 export const nodeKeys = {
   all: ["nodes"] as const,
@@ -71,6 +77,28 @@ export function useUpdateNodeMutation(spaceId: string, nodeId: string | null) {
         queryClient.invalidateQueries({ queryKey: nodeKeys.detail(updated.id) }),
         queryClient.invalidateQueries({ queryKey: timelineKeys.list(spaceId) }),
       ]);
+    },
+  });
+}
+
+export function useCreateNodeRelationMutation(spaceId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: CreateNodeRelationInput) => createNodeRelation(spaceId, input),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: nodeKeys.graph(spaceId) });
+    },
+  });
+}
+
+export function useDeleteNodeRelationMutation(spaceId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (relationId: string) => deleteNodeRelation(spaceId, relationId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: nodeKeys.graph(spaceId) });
     },
   });
 }

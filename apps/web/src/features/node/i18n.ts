@@ -173,12 +173,12 @@ const messages = {
       en: "No dedicated relation model is connected yet",
     },
     relationSourceTimeline: {
-      "zh-CN": "基于 Timeline 结构推导",
-      en: "Derived from timeline structure",
+      "zh-CN": "显式节点连线",
+      en: "Explicit node relations",
     },
     focusHint: {
-      "zh-CN": "选中节点后会高亮其一跳邻居；当前关系线来自 Timeline 结构，后续可继续扩展为更稳定的节点关系模型。",
-      en: "Selecting a node highlights its direct neighbors. The current edges are derived from the timeline structure and can later evolve into a dedicated node relation model.",
+      "zh-CN": "选中节点后会高亮其一跳邻居；你可以删除已有连线，也可以从一个节点拖到另一个节点重新建立连线。",
+      en: "Selecting a node highlights its direct neighbors. You can delete existing edges and reconnect nodes by dragging from one node to another.",
     },
     updatedAt: {
       "zh-CN": "最近更新",

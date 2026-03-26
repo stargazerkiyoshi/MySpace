@@ -13,11 +13,12 @@ export type NodeRecord = {
   content: string | null;
   nodeType: NodeType;
   status: NodeStatus;
+  orderIndex: number;
   createdAt: string;
   updatedAt: string;
 };
 
-export type NodeGraphRelationSource = "none" | "timeline";
+export type NodeGraphRelationSource = "none" | "node_relation";
 
 export type NodeGraphPosition = {
   x: number;
@@ -31,6 +32,7 @@ export type NodeGraphNode = {
   content: string | null;
   nodeType: NodeType;
   status: NodeStatus;
+  orderIndex: number;
   position: NodeGraphPosition;
   metadata: {
     sourceKind: "node";
@@ -45,6 +47,15 @@ export type NodeGraphEdge = {
   target: string;
   relationType: string;
   metadata: Record<string, unknown> | null;
+};
+
+export type NodeRelationRecord = {
+  id: string;
+  spaceId: string;
+  sourceNodeId: string;
+  targetNodeId: string;
+  relationType: string;
+  createdAt: string;
 };
 
 export type NodeGraphRecord = {
@@ -66,3 +77,8 @@ export type CreateNodeInput = {
 };
 
 export type UpdateNodeInput = Partial<CreateNodeInput>;
+
+export type CreateNodeRelationInput = {
+  sourceNodeId: string;
+  targetNodeId: string;
+};

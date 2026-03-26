@@ -60,7 +60,7 @@ export function NodeGraphInspector({
               <div className="node-graph__meta-item">
                 <Typography.Text type="secondary">{messages.relationSource}</Typography.Text>
                 <Typography.Paragraph>
-                  {relationSource === "timeline"
+                  {relationSource === "node_relation"
                     ? messages.relationSourceTimeline
                     : messages.relationSourceNone}
                 </Typography.Paragraph>

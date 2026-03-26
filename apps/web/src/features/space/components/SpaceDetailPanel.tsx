@@ -71,20 +71,14 @@ export function SpaceDetailPanel({
             </Space>
           </Space>
 
-          <Space wrap size={[12, 12]} style={{ justifyContent: "space-between" }}>
-            <Space wrap size={[12, 12]}>
-              <Card size="small" bodyStyle={{ padding: "10px 14px" }} style={{ minWidth: 168, borderRadius: 12 }}>
-                <Typography.Text type="secondary">{messages.createdAt}</Typography.Text>
-                <Typography.Paragraph style={{ margin: "8px 0 0" }}>
-                  {formatSpaceDate(space.createdAt)}
-                </Typography.Paragraph>
-              </Card>
-              <Card size="small" bodyStyle={{ padding: "10px 14px" }} style={{ minWidth: 168, borderRadius: 12 }}>
-                <Typography.Text type="secondary">{messages.updatedAt}</Typography.Text>
-                <Typography.Paragraph style={{ margin: "8px 0 0" }}>
-                  {formatSpaceDate(space.updatedAt)}
-                </Typography.Paragraph>
-              </Card>
+          <Space wrap size={[16, 8]} style={{ justifyContent: "space-between" }}>
+            <Space wrap size={[16, 8]}>
+              <Typography.Text type="secondary">
+                {messages.createdAt} {formatSpaceDate(space.createdAt)}
+              </Typography.Text>
+              <Typography.Text type="secondary">
+                {messages.updatedAt} {formatSpaceDate(space.updatedAt)}
+              </Typography.Text>
             </Space>
             {extraActions}
           </Space>

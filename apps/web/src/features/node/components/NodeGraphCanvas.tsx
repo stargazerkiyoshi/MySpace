@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  addEdge,
   applyEdgeChanges,
   applyNodeChanges,
   Background,
+  type Connection,
   Controls,
   Handle,
   MiniMap,
@@ -26,9 +28,13 @@ type NodeGraphCanvasProps = {
   selectedNodeId: string | null;
   neighborIds: string[];
   onSelect: (nodeId: string) => void;
+  onCreateRelation?: (input: { sourceNodeId: string; targetNodeId: string }) => void;
+  onDeleteRelation?: (relationId: string) => void;
+  isRelationMutating?: boolean;
 };
 
 type FlowNodeData = {
+  orderIndex: number;
   title: string;
   content: string;
   statusLabel: string;
@@ -44,9 +50,10 @@ function GraphSummaryNode({
         type="target"
         position={Position.Left}
         className="node-graph__handle"
-        isConnectable={false}
+        isConnectable
       />
       <div className="node-graph__node-badges">
+        <span className="node-graph__node-order">#{data.orderIndex}</span>
         <span className="node-graph__node-status">{data.statusLabel}</span>
         <span className="node-graph__node-type">{data.typeLabel}</span>
       </div>
@@ -56,7 +63,7 @@ function GraphSummaryNode({
         type="source"
         position={Position.Right}
         className="node-graph__handle"
-        isConnectable={false}
+        isConnectable
       />
     </div>
   );
@@ -72,6 +79,9 @@ function NodeGraphCanvasInner({
   selectedNodeId,
   neighborIds,
   onSelect,
+  onCreateRelation,
+  onDeleteRelation,
+  isRelationMutating = false,
 }: NodeGraphCanvasProps) {
   const locale = useUiLocaleStore((state) => state.locale);
   const messages = getNodeMessages(locale);
@@ -90,6 +100,7 @@ function NodeGraphCanvasInner({
         draggable: true,
         selectable: true,
         data: {
+          orderIndex: node.orderIndex,
           title: node.title,
           content: node.content ?? messages.list.noContent,
           statusLabel: getNodeStatusLabel(locale, node.status),
@@ -116,7 +127,7 @@ function NodeGraphCanvasInner({
         },
       };
     });
-  }, [edges, locale, messages.list.noContent, neighborIds, nodes, selectedNodeId]);
+  }, [locale, messages.list.noContent, neighborIds, nodes, selectedNodeId]);
   const flowEdges = useMemo<FlowEdge[]>(() => {
     const neighborSet = new Set(neighborIds);
 
@@ -154,8 +165,46 @@ function NodeGraphCanvasInner({
   }, []);
 
   const handleEdgesChange = useCallback((changes: EdgeChange<FlowEdge>[]) => {
+    const removedEdgeIds = changes
+      .filter((change) => change.type === "remove")
+      .map((change) => change.id);
+
+    if (removedEdgeIds.length && onDeleteRelation) {
+      removedEdgeIds.forEach((edgeId) => onDeleteRelation(edgeId));
+    }
+
     setDisplayEdges((current) => applyEdgeChanges<FlowEdge>(changes, current));
-  }, []);
+  }, [onDeleteRelation]);
+
+  const handleConnect = useCallback(
+    (connection: Connection) => {
+      if (!connection.source || !connection.target || !onCreateRelation) {
+        return;
+      }
+
+      if (connection.source === connection.target) {
+        return;
+      }
+
+      onCreateRelation({
+        sourceNodeId: connection.source,
+        targetNodeId: connection.target,
+      });
+
+      setDisplayEdges((current) =>
+        addEdge(
+          {
+            id: `${connection.source}:${connection.target}`,
+            source: connection.source,
+            target: connection.target,
+            type: "default",
+          },
+          current,
+        ),
+      );
+    },
+    [onCreateRelation],
+  );
 
   const handleInit = useCallback(
     (instance: ReactFlowInstance<FlowNode<FlowNodeData>, FlowEdge>) => {
@@ -176,12 +225,16 @@ function NodeGraphCanvasInner({
       nodeTypes={nodeTypes}
       onNodesChange={handleNodesChange}
       onEdgesChange={handleEdgesChange}
+      onConnect={handleConnect}
       onNodeClick={(_, node) => onSelect(node.id)}
       onInit={handleInit}
       fitView
       fitViewOptions={{ padding: 0.2, minZoom: 0.65 }}
       minZoom={0.4}
       maxZoom={1.8}
+      deleteKeyCode={["Backspace", "Delete"]}
+      nodesConnectable={!isRelationMutating}
+      elementsSelectable={!isRelationMutating}
       attributionPosition="bottom-left"
       className="node-graph__flow"
     >

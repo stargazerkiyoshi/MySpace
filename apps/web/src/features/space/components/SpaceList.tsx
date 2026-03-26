@@ -24,13 +24,16 @@ export function SpaceList({ items, onOpen }: SpaceListProps) {
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+        display: "flex",
+        flexWrap: "wrap",
         gap: 16,
       }}
     >
       {items.map((item) => (
-        <div key={item.id} style={{ minWidth: 0 }}>
+        <div
+          key={item.id}
+          style={{ flex: "0 1 340px", maxWidth: 360, minWidth: 0 }}
+        >
           <Card
             hoverable
             role="button"
@@ -42,7 +45,7 @@ export function SpaceList({ items, onOpen }: SpaceListProps) {
                 onOpen(item.id);
               }
             }}
-            style={{ borderRadius: 16, height: "100%", width: "100%", cursor: "pointer" }}
+            style={{ borderRadius: 16, height: "100%", cursor: "pointer" }}
             styles={{ body: { height: "100%", padding: 18 } }}
           >
             <Space

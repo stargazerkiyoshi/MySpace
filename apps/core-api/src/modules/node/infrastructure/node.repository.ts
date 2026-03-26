@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import type {
   Node,
+  NodeRelation,
   NodeStatus,
   NodeType,
   Prisma,
@@ -25,6 +26,14 @@ export class NodeRepository {
   ): Promise<Node> {
     const owner = await this.ensureDefaultOwner(executor);
     const space = await this.getOwnedSpace(spaceId, owner.id, executor);
+    const maxOrder = await executor.node.aggregate({
+      where: {
+        spaceId: space.id,
+      },
+      _max: {
+        orderIndex: true,
+      },
+    });
 
     return executor.node.create({
       data: {
@@ -33,6 +42,7 @@ export class NodeRepository {
         content: input.content?.trim() || null,
         nodeType: toPrismaNodeType(input.nodeType),
         status: toPrismaNodeStatus(input.status),
+        orderIndex: (maxOrder._max.orderIndex ?? 0) + 1,
       },
     });
   }
@@ -48,9 +58,7 @@ export class NodeRepository {
       where: {
         spaceId: space.id,
       },
-      orderBy: {
-        updatedAt: "desc",
-      },
+      orderBy: [{ orderIndex: "asc" }, { createdAt: "asc" }],
     });
   }
 
@@ -97,6 +105,98 @@ export class NodeRepository {
         ...(input.status !== undefined
           ? { status: toPrismaNodeStatus(input.status) }
           : {}),
+      },
+    });
+  }
+
+  async listNodeRelations(
+    spaceId: string,
+    executor: PrismaService | Prisma.TransactionClient = this.prisma,
+  ): Promise<NodeRelation[]> {
+    const owner = await this.ensureDefaultOwner(executor);
+    const space = await this.getOwnedSpace(spaceId, owner.id, executor);
+
+    return executor.nodeRelation.findMany({
+      where: {
+        spaceId: space.id,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+  }
+
+  async createNodeRelation(
+    spaceId: string,
+    sourceNodeId: string,
+    targetNodeId: string,
+    executor: PrismaService | Prisma.TransactionClient = this.prisma,
+  ): Promise<NodeRelation> {
+    if (sourceNodeId === targetNodeId) {
+      throw new BadRequestException("A node relation cannot point to the same node.");
+    }
+
+    const owner = await this.ensureDefaultOwner(executor);
+    const space = await this.getOwnedSpace(spaceId, owner.id, executor);
+    const nodes = await executor.node.findMany({
+      where: {
+        id: {
+          in: [sourceNodeId, targetNodeId],
+        },
+        spaceId: space.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (nodes.length !== 2) {
+      throw new BadRequestException("Both relation nodes must belong to the current space.");
+    }
+
+    return executor.nodeRelation.upsert({
+      where: {
+        spaceId_sourceNodeId_targetNodeId_relationType: {
+          spaceId: space.id,
+          sourceNodeId,
+          targetNodeId,
+          relationType: "sequence",
+        },
+      },
+      update: {},
+      create: {
+        spaceId: space.id,
+        sourceNodeId,
+        targetNodeId,
+        relationType: "sequence",
+      },
+    });
+  }
+
+  async deleteNodeRelation(
+    spaceId: string,
+    relationId: string,
+    executor: PrismaService | Prisma.TransactionClient = this.prisma,
+  ): Promise<void> {
+    const owner = await this.ensureDefaultOwner(executor);
+    const space = await this.getOwnedSpace(spaceId, owner.id, executor);
+    const relation = await executor.nodeRelation.findFirst({
+      where: {
+        id: relationId,
+        spaceId: space.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!relation) {
+      throw new NotFoundException(`Node relation '${relationId}' was not found.`);
+    }
+
+    await executor.nodeRelation.delete({
+      where: {
+        id: relation.id,
       },
     });
   }

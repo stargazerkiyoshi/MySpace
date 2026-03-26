@@ -11,9 +11,30 @@
   box-shadow: 0 12px 28px rgba(36, 52, 71, 0.08);
 }
 
+.node-graph__canvas-card {
+  position: relative;
+}
+
 .node-graph__canvas-card .ant-card-body,
 .node-graph__inspector .ant-card-body {
   padding: 16px;
+}
+
+.node-graph__canvas-card--compact .ant-card-body {
+  padding: 0;
+}
+
+.node-graph__overlay-actions {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 5;
+}
+
+.node-graph__canvas-card--compact .node-graph__flow {
+  height: 680px;
+  min-height: 680px;
+  border-radius: 18px;
 }
 
 .node-graph__flow {
@@ -26,6 +47,29 @@
   background:
     radial-gradient(circle at top, rgba(47, 91, 138, 0.08), transparent 26%),
     linear-gradient(180deg, #fbfaf7 0%, #f1ece4 100%);
+}
+
+.node-graph__empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 560px;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top, rgba(47, 91, 138, 0.08), transparent 26%),
+    linear-gradient(180deg, #fbfaf7 0%, #f1ece4 100%);
+}
+
+.node-graph__canvas-card--compact .node-graph__empty-state {
+  min-height: 680px;
+  border-radius: 18px;
+}
+
+.node-graph__empty-copy {
+  max-width: 420px;
+  padding: 32px;
+  text-align: center;
 }
 
 .node-graph__node {
@@ -61,7 +105,8 @@
 }
 
 .node-graph__node-status,
-.node-graph__node-type {
+.node-graph__node-type,
+.node-graph__node-order {
   display: inline-flex;
   align-items: center;
   min-height: 24px;
@@ -70,6 +115,11 @@
   font-size: 12px;
   background: #eef2f7;
   color: #516173;
+}
+
+.node-graph__node-order {
+  background: #2f5b8a;
+  color: #fff;
 }
 
 .node-graph__meta-grid {
@@ -97,5 +147,18 @@
   .node-graph__flow {
     height: 480px;
     min-height: 480px;
+  }
+
+  .node-graph__empty-state {
+    min-height: 480px;
+  }
+
+  .node-graph__canvas-card--compact .node-graph__flow {
+    height: 520px;
+    min-height: 520px;
+  }
+
+  .node-graph__canvas-card--compact .node-graph__empty-state {
+    min-height: 520px;
   }
 }

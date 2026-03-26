@@ -7,6 +7,7 @@ export class NodeSummaryDto {
   content!: string | null;
   nodeType!: NodeTypeValue;
   status!: NodeStatusValue;
+  orderIndex!: number;
   createdAt!: string;
   updatedAt!: string;
 }
