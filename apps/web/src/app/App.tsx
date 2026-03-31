@@ -8,8 +8,6 @@ export function App() {
       theme={{
         algorithm: theme.defaultAlgorithm,
         token: {
-          colorPrimary: "#2f5b8a",
-          borderRadius: 14,
           fontFamily:
             "'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif",
           colorBgLayout: "#f4f1eb",

@@ -1,4 +1,4 @@
-import { Card, Empty, Space, Typography } from "antd";
+import { Button, Card, Empty, List, Space, Tag, Typography } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { getSpaceMessages } from "../i18n";
 import type { SpaceRecord } from "../types";
@@ -22,18 +22,11 @@ export function SpaceList({ items, onOpen }: SpaceListProps) {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 16,
-      }}
-    >
-      {items.map((item) => (
-        <div
-          key={item.id}
-          style={{ flex: "0 1 340px", maxWidth: 360, minWidth: 0 }}
-        >
+    <List
+      grid={{ gutter: 20, xs: 1, sm: 1, md: 2, xl: 3 }}
+      dataSource={items}
+      renderItem={(item) => (
+        <List.Item>
           <Card
             hoverable
             role="button"
@@ -45,43 +38,60 @@ export function SpaceList({ items, onOpen }: SpaceListProps) {
                 onOpen(item.id);
               }
             }}
-            style={{ borderRadius: 16, height: "100%", cursor: "pointer" }}
-            styles={{ body: { height: "100%", padding: 18 } }}
           >
             <Space
               direction="vertical"
-              size="small"
-              style={{ width: "100%", minHeight: 132, height: "100%", justifyContent: "space-between" }}
+              size="middle"
+              style={{ width: "100%", minHeight: 160, justifyContent: "space-between" }}
             >
-              <Space
-                align="start"
-                style={{ width: "100%", justifyContent: "space-between" }}
-              >
-                <Space direction="vertical" size={4} style={{ minWidth: 0, flex: 1 }}>
+              <Space direction="vertical" size="small" style={{ width: "100%", minWidth: 0 }}>
+                <Space
+                  align="start"
+                  style={{ width: "100%", justifyContent: "space-between" }}
+                  wrap
+                >
                   <Typography.Title
                     level={5}
-                    style={{ margin: 0 }}
+                    style={{ margin: 0, minWidth: 0 }}
                     ellipsis={{ rows: 1, tooltip: item.name }}
                   >
                     {item.name}
                   </Typography.Title>
+                  <Tag color="blue" bordered={false}>
+                    {item.slug}
+                  </Tag>
                 </Space>
+
+                <Typography.Paragraph
+                  ellipsis={{ rows: 3, tooltip: item.description || messages.noDescription }}
+                  type="secondary"
+                  style={{ marginBottom: 0 }}
+                >
+                  {item.description || messages.noDescription}
+                </Typography.Paragraph>
               </Space>
-              <Typography.Paragraph
-                ellipsis={{ rows: 2, tooltip: item.description || messages.noDescription }}
-                style={{ marginBottom: 0, color: "#64748b", lineHeight: 1.5 }}
+
+              <Space
+                align="center"
+                style={{ width: "100%", justifyContent: "space-between" }}
+                wrap
               >
-                {item.description || messages.noDescription}
-              </Typography.Paragraph>
-              <Space wrap style={{ justifyContent: "space-between" }}>
                 <Typography.Text type="secondary">
                   {messages.createdAt} {formatSpaceDate(item.createdAt)}
                 </Typography.Text>
+                <Button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onOpen(item.id);
+                  }}
+                >
+                  {messages.open}
+                </Button>
               </Space>
             </Space>
           </Card>
-        </div>
-      ))}
-    </div>
+        </List.Item>
+      )}
+    />
   );
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Alert, Button, Card, Modal, Skeleton, Space } from "antd";
+import { ApartmentOutlined } from "@ant-design/icons";
+import { Alert, Breadcrumb, Button, Card, Modal, Skeleton, Space, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { SpaceCreateForm } from "../components/SpaceCreateForm";
@@ -25,7 +26,33 @@ export function SpaceContainer() {
   }
 
   return (
-    <Space direction="vertical" size="large" style={{ width: "100%" }}>
+    <Space direction="vertical" size={24} style={{ width: "100%" }}>
+      <Breadcrumb
+        items={[
+          {
+            title: (
+              <Space size={6}>
+                <ApartmentOutlined />
+                <span>{messages.title}</span>
+              </Space>
+            ),
+          },
+        ]}
+      />
+
+      <Space
+        align="center"
+        style={{ width: "100%", justifyContent: "space-between" }}
+        wrap
+      >
+        <Typography.Text type="secondary">
+          {query.data ? `${query.data.length} ${locale === "zh-CN" ? "个空间" : "spaces"}` : null}
+        </Typography.Text>
+        <Button type="primary" onClick={() => setIsCreateOpen(true)}>
+          {messages.createTitle}
+        </Button>
+      </Space>
+
       {query.isError ? (
         <Alert
           type="error"
@@ -50,12 +77,6 @@ export function SpaceContainer() {
           description={messages.createSuccessDescription}
         />
       ) : null}
-
-      <Space>
-        <Button type="primary" onClick={() => setIsCreateOpen(true)}>
-          {messages.createTitle}
-        </Button>
-      </Space>
 
       {query.isLoading ? (
         <Card>

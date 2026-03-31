@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Alert, Button, Card, Drawer, Skeleton, Space } from "antd";
+import { ApartmentOutlined, CompassOutlined } from "@ant-design/icons";
+import { Alert, Breadcrumb, Button, Card, Drawer, Skeleton, Space } from "antd";
+import { Link } from "react-router-dom";
 import { NodeCreateForm } from "@/features/node/components/NodeCreateForm";
 import { NodeGraphWorkspace } from "@/features/node/containers/NodeGraphWorkspace";
 import { NodeWorkspace } from "@/features/node/containers/NodeWorkspace";
 import { useCreateNodeMutation } from "@/features/node/hooks";
 import { SpaceTimelinePanel } from "@/features/timeline/containers/SpaceTimelinePanel";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
-import { getSpaceMessages } from "../i18n";
 import { SpaceDetailPanel } from "../components/SpaceDetailPanel";
+import { getSpaceMessages } from "../i18n";
 import { useSpaceDetailQuery, useUpdateSpaceMutation } from "../hooks";
 import type { CreateNodeInput } from "@/features/node/types";
 import type { UpdateSpaceInput } from "../types";
@@ -67,6 +69,29 @@ export function SpaceDetailContainer({
 
   return (
     <>
+      <Breadcrumb
+        style={{ marginBottom: 12 }}
+        items={[
+          {
+            title: (
+              <Link to="/spaces">
+                <Space size={6}>
+                  <ApartmentOutlined />
+                  <span>{locale === "zh-CN" ? "空间" : "Spaces"}</span>
+                </Space>
+              </Link>
+            ),
+          },
+          {
+            title: (
+              <Space size={6}>
+                <CompassOutlined />
+                <span>{query.data.name}</span>
+              </Space>
+            ),
+          },
+        ]}
+      />
       <SpaceDetailPanel
         space={query.data}
         onUpdate={handleUpdate}
@@ -74,20 +99,17 @@ export function SpaceDetailContainer({
         updateError={updateMutation.isError ? updateMutation.error.message : undefined}
         updateSuccess={updateMutation.isSuccess}
       />
-      <div style={{ marginTop: 8 }}>
-        <NodeGraphWorkspace
-          spaceId={query.data.id}
-          compact
-          overlayActions={
-            <Space wrap size={[8, 8]}>
-              <Button type="primary" onClick={() => setIsCreateNodeOpen(true)}>
-                {locale === "zh-CN" ? "创建节点" : "Create Node"}
-              </Button>
-              <Button onClick={() => setIsNodeListOpen(true)}>{spaceMessages.nodeEntry}</Button>
-              <Button onClick={() => setIsHistoryOpen(true)}>{spaceMessages.historyEntry}</Button>
-            </Space>
-          }
-        />
+      <Card size="small" style={{ marginTop: 16, marginBottom: 6 }}>
+        <Space wrap size={[12, 12]}>
+          <Button type="primary" onClick={() => setIsCreateNodeOpen(true)}>
+            {locale === "zh-CN" ? "创建节点" : "Create Node"}
+          </Button>
+          <Button onClick={() => setIsNodeListOpen(true)}>{spaceMessages.nodeEntry}</Button>
+          <Button onClick={() => setIsHistoryOpen(true)}>{spaceMessages.historyEntry}</Button>
+        </Space>
+      </Card>
+      <div>
+        <NodeGraphWorkspace spaceId={query.data.id} compact />
       </div>
       <Drawer
         title={locale === "zh-CN" ? "创建节点" : "Create Node"}

@@ -28,6 +28,7 @@ type NodeGraphCanvasProps = {
   selectedNodeId: string | null;
   neighborIds: string[];
   onSelect: (nodeId: string) => void;
+  onEdit?: (nodeId: string) => void;
   onCreateRelation?: (input: { sourceNodeId: string; targetNodeId: string }) => void;
   onDeleteRelation?: (relationId: string) => void;
   isRelationMutating?: boolean;
@@ -40,6 +41,22 @@ type FlowNodeData = {
   statusLabel: string;
   typeLabel: string;
 };
+
+const graphTheme = {
+  selectedBorder: "#5c7591",
+  neighborBorder: "#c7d3df",
+  defaultBorder: "#ddd6cb",
+  selectedBackground: "#f3f6fa",
+  neighborBackground: "#fafbfd",
+  defaultBackground: "#fcfbf8",
+  selectedShadow: "0 14px 30px rgba(92, 117, 145, 0.16)",
+  defaultShadow: "0 10px 24px rgba(36, 52, 71, 0.08)",
+  edgeSelected: "#6f87a2",
+  edgeDefault: "#d7d0c6",
+  minimapSelected: "#5c7591",
+  minimapDefault: "#bcc8d4",
+  backgroundDot: "#ddd6cb",
+} as const;
 
 function GraphSummaryNode({
   data,
@@ -79,6 +96,7 @@ function NodeGraphCanvasInner({
   selectedNodeId,
   neighborIds,
   onSelect,
+  onEdit,
   onCreateRelation,
   onDeleteRelation,
   isRelationMutating = false,
@@ -110,18 +128,18 @@ function NodeGraphCanvasInner({
           width: 210,
           borderRadius: 18,
           border: isSelected
-            ? "2px solid #2f5b8a"
+            ? `2px solid ${graphTheme.selectedBorder}`
             : isNeighbor
-              ? "1px solid #87b5e0"
-              : "1px solid #d7e1eb",
+              ? `1px solid ${graphTheme.neighborBorder}`
+              : `1px solid ${graphTheme.defaultBorder}`,
           background: isSelected
-            ? "#f2f7fc"
+            ? graphTheme.selectedBackground
             : isNeighbor
-              ? "#f8fbfe"
-              : "#fffdf8",
+              ? graphTheme.neighborBackground
+              : graphTheme.defaultBackground,
           boxShadow: isSelected
-            ? "0 16px 36px rgba(47, 91, 138, 0.18)"
-            : "0 10px 28px rgba(36, 52, 71, 0.08)",
+            ? graphTheme.selectedShadow
+            : graphTheme.defaultShadow,
           opacity: isDimmed ? 0.4 : 1,
           padding: 0,
         },
@@ -141,7 +159,7 @@ function NodeGraphCanvasInner({
         ...edge,
         animated: isSelectedPath,
         style: {
-          stroke: isSelectedPath ? "#2f5b8a" : "#cbd5e1",
+          stroke: isSelectedPath ? graphTheme.edgeSelected : graphTheme.edgeDefault,
           strokeWidth: isSelectedPath ? 2 : 1.25,
           opacity: selectedNodeId && !isSelectedPath ? 0.25 : 0.9,
         },
@@ -227,6 +245,7 @@ function NodeGraphCanvasInner({
       onEdgesChange={handleEdgesChange}
       onConnect={handleConnect}
       onNodeClick={(_, node) => onSelect(node.id)}
+      onNodeDoubleClick={(_, node) => onEdit?.(node.id)}
       onInit={handleInit}
       fitView
       fitViewOptions={{ padding: 0.2, minZoom: 0.65 }}
@@ -238,11 +257,15 @@ function NodeGraphCanvasInner({
       attributionPosition="bottom-left"
       className="node-graph__flow"
     >
-      <Background gap={18} color="#e2e8f0" />
+      <Background gap={18} color={graphTheme.backgroundDot} />
       <MiniMap
         pannable
         zoomable
-        nodeColor={(node) => (node.id === selectedNodeId ? "#2f5b8a" : "#9fbad5")}
+        nodeColor={(node) =>
+          node.id === selectedNodeId
+            ? graphTheme.minimapSelected
+            : graphTheme.minimapDefault
+        }
       />
       <Controls showInteractive={false} />
     </ReactFlow>

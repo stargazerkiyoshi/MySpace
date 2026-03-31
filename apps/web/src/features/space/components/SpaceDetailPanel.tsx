@@ -1,6 +1,5 @@
 import { useEffect, type ReactNode, useState } from "react";
-import { Alert, Button, Card, Descriptions, Empty, Modal, Space, Typography } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Alert, Button, Card, Modal, Space, Typography } from "antd";
 import { useUiLocaleStore } from "@/shared/state/ui-locale.store";
 import { SpaceCreateForm } from "./SpaceCreateForm";
 import { getSpaceMessages } from "../i18n";
@@ -24,10 +23,8 @@ export function SpaceDetailPanel({
   updateSuccess,
   extraActions,
 }: SpaceDetailPanelProps) {
-  const navigate = useNavigate();
   const { locale } = useUiLocaleStore();
   const messages = getSpaceMessages(locale).detail;
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   useEffect(() => {
@@ -38,10 +35,7 @@ export function SpaceDetailPanel({
 
   return (
     <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-      <Card
-        bodyStyle={{ padding: 18 }}
-        style={{ borderRadius: 16, borderColor: "#dbeafe", background: "#f8fbff" }}
-      >
+      <Card>
         <Space direction="vertical" size="middle" style={{ width: "100%" }}>
           <Space
             align="start"
@@ -61,10 +55,6 @@ export function SpaceDetailPanel({
             </Space>
 
             <Space wrap>
-              <Button onClick={() => navigate("/spaces")}>{messages.back}</Button>
-              <Button type="default" onClick={() => setIsDetailOpen(true)}>
-                {messages.viewDetails}
-              </Button>
               <Button type="primary" onClick={() => setIsEditOpen(true)}>
                 {messages.editSpace}
               </Button>
@@ -84,44 +74,6 @@ export function SpaceDetailPanel({
           </Space>
         </Space>
       </Card>
-
-      <Modal
-        title={space.name}
-        open={isDetailOpen}
-        footer={null}
-        onCancel={() => setIsDetailOpen(false)}
-      >
-        <Space direction="vertical" size="large" style={{ width: "100%" }}>
-          <Descriptions
-            column={1}
-            items={[
-              { key: "slug", label: messages.slug, children: space.slug },
-              {
-                key: "description",
-                label: messages.description,
-                children: space.description || messages.noDescription,
-              },
-              {
-                key: "createdAt",
-                label: messages.createdAt,
-                children: formatSpaceDate(space.createdAt),
-              },
-              {
-                key: "updatedAt",
-                label: messages.updatedAt,
-                children: formatSpaceDate(space.updatedAt),
-              },
-            ]}
-          />
-          <Card size="small">
-            <Typography.Title level={5}>{messages.placeholderTitle}</Typography.Title>
-            <Typography.Paragraph style={{ color: "#64748b", marginBottom: 16 }}>
-              {messages.placeholderDescription}
-            </Typography.Paragraph>
-            <Empty description={messages.placeholderEmpty} />
-          </Card>
-        </Space>
-      </Modal>
 
       <Modal
         title={messages.editSpace}

@@ -7,7 +7,7 @@
 
 .node-graph__canvas-card,
 .node-graph__inspector {
-  border-radius: 18px !important;
+  border-radius: 8px !important;
   box-shadow: 0 12px 28px rgba(36, 52, 71, 0.08);
 }
 
@@ -24,17 +24,10 @@
   padding: 0;
 }
 
-.node-graph__overlay-actions {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  z-index: 5;
-}
-
 .node-graph__canvas-card--compact .node-graph__flow {
   height: 680px;
   min-height: 680px;
-  border-radius: 18px;
+  border-radius: 8px;
 }
 
 .node-graph__flow {
@@ -43,10 +36,8 @@
   width: 100%;
   height: 560px;
   min-height: 560px;
-  border-radius: 16px;
-  background:
-    radial-gradient(circle at top, rgba(47, 91, 138, 0.08), transparent 26%),
-    linear-gradient(180deg, #fbfaf7 0%, #f1ece4 100%);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fcfbf8 0%, #f3eee6 100%);
 }
 
 .node-graph__empty-state {
@@ -55,15 +46,13 @@
   justify-content: center;
   width: 100%;
   min-height: 560px;
-  border-radius: 16px;
-  background:
-    radial-gradient(circle at top, rgba(47, 91, 138, 0.08), transparent 26%),
-    linear-gradient(180deg, #fbfaf7 0%, #f1ece4 100%);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fcfbf8 0%, #f3eee6 100%);
 }
 
 .node-graph__canvas-card--compact .node-graph__empty-state {
   min-height: 680px;
-  border-radius: 18px;
+  border-radius: 8px;
 }
 
 .node-graph__empty-copy {
@@ -84,7 +73,7 @@
   width: 10px !important;
   height: 10px !important;
   border: 2px solid #fff !important;
-  background: #2f5b8a !important;
+  background: #5c7591 !important;
 }
 
 .node-graph__node strong {
@@ -94,7 +83,7 @@
 }
 
 .node-graph__node small {
-  color: #64748b;
+  color: #6b7280;
   line-height: 1.45;
 }
 
@@ -113,12 +102,12 @@
   padding: 0 10px;
   border-radius: 999px;
   font-size: 12px;
-  background: #eef2f7;
-  color: #516173;
+  background: #f3efe7;
+  color: #6b7280;
 }
 
 .node-graph__node-order {
-  background: #2f5b8a;
+  background: #5c7591;
   color: #fff;
 }
 
@@ -130,13 +119,79 @@
 
 .node-graph__meta-item {
   padding: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e3ddd2;
   border-radius: 14px;
-  background: #f8fafc;
+  background: #faf8f3;
 }
 
 .node-graph__meta-item .ant-typography {
   margin-bottom: 0;
+}
+
+.node-detail-form .ant-descriptions-view table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.node-detail-form .ant-descriptions-item-label {
+  width: 120px;
+  vertical-align: top;
+}
+
+.node-detail-form .ant-descriptions-item-content {
+  width: 100%;
+}
+
+.node-detail-form__value {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  margin: -6px -8px;
+  border-radius: 8px;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.node-detail-form__value:hover,
+.node-detail-form__value--editing {
+  background: rgba(230, 237, 245, 0.7);
+  box-shadow: inset 0 0 0 1px rgba(47, 91, 138, 0.12);
+}
+
+.node-detail-form__display {
+  flex: 1;
+  min-width: 0;
+}
+
+.node-detail-form__edit-button {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+}
+
+.node-detail-form__value:hover .node-detail-form__edit-button,
+.node-detail-form__value--editing .node-detail-form__edit-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+.node-detail-form__editor {
+  flex: 1;
+  min-width: 0;
+}
+
+.node-detail-form__editor .ant-form-item,
+.node-detail-form__editor .ant-form-item-control,
+.node-detail-form__editor .ant-form-item-control-input,
+.node-detail-form__editor .ant-form-item-control-input-content,
+.node-detail-form__editor .ant-input,
+.node-detail-form__editor .ant-input-affix-wrapper,
+.node-detail-form__editor .ant-select,
+.node-detail-form__editor .ant-select-selector {
+  width: 100%;
 }
 
 @media (max-width: 1080px) {

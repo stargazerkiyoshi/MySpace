@@ -90,7 +90,7 @@ export function CurrentStateOverview({ dashboard }: CurrentStateOverviewProps) {
             <Typography.Text type="secondary">
               {messages.createdAt}: {formatTimelineDate(item.createdAt, locale)}
             </Typography.Text>
-            <Button type="link" style={{ paddingInline: 0 }}>
+            <Button type="link">
               <Link to={`/spaces/${spaceId}?timelineEvent=${item.eventId}`}>
                 {messages.openHistory}
               </Link>
